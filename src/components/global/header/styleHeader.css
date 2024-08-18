@@ -1,0 +1,21 @@
+header{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    width: 100vw;
+    height: 90px;
+    background-color: rgb(34, 34, 34);
+    border-radius: 0px 0px 10px 10px;
+}
+
+header a{
+    margin-right: 20px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+header a:hover{
+    color: rgb(173, 173, 173);
+    transition: all 0.2s ease-in-out;
+}
