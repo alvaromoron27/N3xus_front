@@ -1,10 +1,10 @@
 import './styleProfile.css';
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect } from 'react';
-import Header from '../global/header/header.jsx';
+import Header from '../../components/global/header/header.jsx';
 import { useNavigate } from 'react-router-dom';
 import { deleteAccount } from '../../api.js';
-import { useAuth } from '../auth/authContext.js';
+import { useAuth } from '../../services/authContext.js';
 
 function Profile() {
 

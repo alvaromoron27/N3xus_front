@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import './styleRegister.css';
+import '../../../global/styles/globalStyles.css'
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { registerUser } from '../../../api';
-import Header from '../../global/header/header.jsx';
+import { registerUser } from '../../../api.js';
+import Header from '../../../components/global/header/header.jsx';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -166,7 +167,7 @@ const Register = () => {
           {formik.touched.confirmarContraseña && formik.errors.confirmarContraseña && <p className="error-message">{formik.errors.confirmarContraseña}</p>}
         </div>
         <div>
-          <input className='button' type='submit' value='Registrarme' />
+          <input className='buttonAuth' type='submit' value='Registrarme' />
         </div>
       </form>
       {formik.errors.general && <p className="error-message">{formik.errors.general}</p>}

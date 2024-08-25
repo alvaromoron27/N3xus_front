@@ -1,0 +1,34 @@
+.buttonAuth{
+    cursor: pointer;
+    position: relative;
+    padding: 8px 20px;
+    font-size: 18px;
+    color: black;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 34px;
+    background-color: #ffff00;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+    overflow: hidden;
+    font-family: 'regular';
+}
+
+.ebook-category-tecnologia{
+    display: flex;
+    justify-content: center;
+    padding: 2px;
+    background-color: #71eaff;
+    border-radius: 5px;
+    height: 25px;
+    color: rgb(4, 1, 34);
+}
+
+.ebook-autor{
+    display: flex;
+    justify-content: center;
+    padding: 4px;
+    background-color: #d6d6d6;
+    border-radius: 5px;
+    height: 25px;
+    color: rgb(0, 0, 0);
+}

@@ -1,0 +1,14 @@
+.profile{
+    width: 100vw;
+    height: 100vh;
+    color: rgb(0, 0, 0);
+    font-family: 'regular';
+}
+
+.profile h1{
+    text-align: center;
+}
+
+.profile_deleteAccount{
+    background-color: red;
+}

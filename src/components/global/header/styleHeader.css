@@ -1,11 +1,13 @@
 header{
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: space-between;
     width: 100vw;
-    height: 90px;
-    background-color: rgb(34, 34, 34);
+    min-height: 90px;
+    background-color: rgb(7, 7, 37);
     border-radius: 0px 0px 10px 10px;
+    backdrop-filter: blur(4px);
+    border-bottom: 1px solid white;
 }
 
 header a{
@@ -13,9 +15,22 @@ header a{
     color: white;
     text-decoration: none;
     font-weight: 500;
+    margin-left: 20px;
 }
 
 header a:hover{
     color: rgb(173, 173, 173);
     transition: all 0.2s ease-in-out;
+}
+
+.active {
+    color: yellow;
+}
+
+.header-icon-cart{
+    margin-top: 7px;
+}
+
+header a img{
+    width: 100px;
 }

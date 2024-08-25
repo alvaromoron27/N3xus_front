@@ -1,9 +1,11 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import './stylePasswordRecovery.css';
+import '../../../global/styles/globalStyles.css'
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import { recoverPassword } from '../../../api';
+import { recoverPassword } from '../../../api.js';
+import Header from '../../../components/global/header/header.jsx'
 
 function PasswordRecovery() {
 
@@ -27,7 +29,6 @@ function PasswordRecovery() {
         onSubmit: async (values) => {
             try {
                 await recoverPassword(values.correo);
-                console.log(values.correo);
                 localStorage.setItem('showResetMessage', 'true');
                 localStorage.setItem('emailRecoveryPassword', values.correo);
                 navigate('/login');
@@ -40,6 +41,7 @@ function PasswordRecovery() {
 
     return (
         <div className="passwd_recover">
+            <Header />
             <form className='passwd_recover_form' onSubmit={formik.handleSubmit}>
                 <h1>Recuperar contraseña</h1>
                 <div>
@@ -57,8 +59,8 @@ function PasswordRecovery() {
                     {formik.touched.correo && formik.errors.correo && <p className="error-message">{formik.errors.correo}</p>}
                 </div>
                 <div>
-                    <input className='button' type='submit' value='Enviar' />
-                    <button className='button buttonBack' onClick={handleBackClick}>Volver</button>
+                    <input className='buttonAuth' type='submit' value='Enviar' />
+                    <button className='buttonAuth buttonBack' onClick={handleBackClick}>Volver</button>
                 </div>
             </form>
         </div>

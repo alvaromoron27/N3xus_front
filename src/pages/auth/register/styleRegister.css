@@ -1,0 +1,151 @@
+@font-face {
+    font-family: 'bold';
+    src: url('../../../assets/Jost-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+
+@font-face {
+    font-family: 'regular';
+    src: url('../../../assets/Jost-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'italica';
+    src: url('../../../assets/Jost-MediumItalic.ttf') format('truetype');
+    font-weight: normal;
+}
+
+body,
+html {
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.register {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    min-height: 100vh;
+    background-color: rgb(240, 240, 240);
+}
+
+.register_form h1 {
+    color: rgb(0, 0, 0);
+    font-family: 'bold';
+    letter-spacing: 4px;
+}
+
+.register_form {
+    color: #000000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    padding: 20px;
+    border: 2px solid #757575;
+    border-radius: 20px;
+    font-family: 'regular';
+    font-size: large;
+    width: 270px;
+    backdrop-filter: blur(6px);
+    margin-top: 12vh;
+    background-color: white;
+}
+
+.register_form div {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    align-items: center;
+}
+
+.register_form div .register_form_inputs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.register_form div .register_form_inputs svg {
+    position: absolute;
+    right: 60px;
+}
+
+.register_form div .register_form_inputs button {
+    position: absolute;
+    right: 0px;
+    color: rgb(0, 0, 0);
+    font-size: large;
+    margin-bottom: 18px;
+}
+
+.register_form .input {
+    background-color: transparent;
+    border: 2px solid rgb(0, 0, 0);
+    height: 25px;
+    width: 170px;
+    border-radius: 10px;
+    outline: none;
+    padding: 5px;
+    font-size: 16px;
+    font-family: 'regular';
+    color: rgb(0, 0, 0);
+    padding-right: 30px;
+}
+
+/* Estilo específico para el autocompletado en WebKit */
+.register_form .input:-webkit-autofill {
+    -webkit-text-fill-color: rgb(3, 3, 3) !important;
+    background-color: transparent !important;
+    transition: background-color 50000s ease-in-out 0s;
+}
+
+/* Override para el estado enfocado del autocompletado en WebKit */
+.register_form .input:-webkit-autofill:focus {
+    -webkit-text-fill-color: rgb(0, 0, 0) !important;
+    background-color: transparent !important;
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+}
+
+.input:-internal-autofill-selected {
+    background-color: transparent !important;
+}
+
+.register_form .input::placeholder {
+    color: rgb(0, 0, 0)
+}
+
+.error-message {
+    font-family: 'italica';
+    color: rgb(245, 17, 1);
+    margin: 0px;
+    max-width: 300px;
+    text-align: center;
+}
+
+.button:hover::before {
+    scale: 3;
+}
+
+.button:hover {
+    scale: 1.07;
+    background-color: #ffff00;
+}
+
+.button:active {
+    scale: 1;
+}
+
+.linkLogin {
+    color: rgb(0, 0, 0);
+    font-family: 'regular';
+    margin: 0;
+    margin-top: 15px;
+    padding: 0;
+}
+
+.linkLogin a {
+    color: #88881e;
+}
