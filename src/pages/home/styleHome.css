@@ -1,4 +1,4 @@
-.home{
+.home {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -8,7 +8,7 @@
     font-family: 'regular';
 }
 
-.home-head{
+.home-head {
     position: relative;
     width: 100vw;
     max-width: 1350px;
@@ -18,7 +18,7 @@
     justify-content: center;
 }
 
-.home-head input{
+.home-head input {
     position: absolute;
     right: 20px;
     top: 50%;
@@ -37,7 +37,8 @@
 }
 
 .right-input {
-    padding-right: 30px; /* Espacio para el icono */
+    padding-right: 30px;
+    /* Espacio para el icono */
     height: 100%;
     box-sizing: border-box;
     outline: none;
@@ -51,13 +52,15 @@
     right: 25px;
     width: 20px;
     height: 20px;
-    pointer-events: none; /* Evita que el icono interfiera con el input */
-    color: #383838; /* Cambia el color según tus preferencias */
+    pointer-events: none;
+    /* Evita que el icono interfiera con el input */
+    color: #383838;
+    /* Cambia el color según tus preferencias */
     display: flex;
     align-items: center;
 }
 
-.home-options{
+.home-options {
     width: 100vw;
     display: flex;
     flex-direction: row;
@@ -65,7 +68,7 @@
     max-width: 1300px;
 }
 
-.home-options .home-option-addEbook{
+.home-options .home-option-addEbook {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -81,10 +84,11 @@
     box-shadow: 1px 2px 3px rgb(0, 0, 0);
 }
 
-.home-options .home-option-addEbook:hover{
+.home-options .home-option-addEbook:hover {
     background-color: rgb(65, 65, 207);
 }
-.filter-ebooks{
+
+.filter-ebooks {
     display: flex;
     flex-direction: row;
     width: 100vw;
@@ -92,7 +96,7 @@
     padding: 20px;
 }
 
-.filter-ebooks-tag{
+.filter-ebooks-tag {
     margin-left: 50px;
     background-color: rgb(192, 214, 243);
     padding: 5px;
@@ -100,8 +104,8 @@
     transition: all 0.1s;
 }
 
- /* Estilo del botón principal */
- .dropdown-button {
+/* Estilo del botón principal */
+.dropdown-button {
     margin-left: 50px;
     background-color: rgb(192, 214, 243);
     padding: 10px;
@@ -109,69 +113,72 @@
     transition: all 0.1s;
     cursor: pointer;
     border: 0px;
-  }
+}
 
-.filter-ebooks-tag-news{
+.filter-ebooks-tag-news {
     box-shadow: 1px 1px 15px rgb(73, 73, 158);
     background-color: rgb(73, 73, 158);
     border: 1px solid gray;
     color: white;
 }
 
-.filter-ebooks-tag-all{
+.filter-ebooks-tag-all {
     box-shadow: 1px 1px 15px rgb(73, 73, 158);
     background-color: rgb(73, 73, 158);
     border: 1px solid gray;
     color: white;
 }
 
-.filter-ebooks-tag-categories{
+.filter-ebooks-tag-categories {
     box-shadow: 1px 1px 15px rgb(73, 73, 158);
     background-color: rgb(73, 73, 158);
     color: white;
 }
 
-.filter-ebooks-tag:hover{
+.filter-ebooks-tag:hover {
     box-shadow: 1px 1px 10px rgb(192, 214, 243);
 }
-  
-  /* Ocultar el contenido del dropdown por defecto */
-  .dropdown-content {
+
+.dropdown {
+    position: relative;
+}
+
+/* Ocultar el contenido del dropdown por defecto */
+.dropdown-content {
     display: none;
     position: absolute;
     background-color: rgb(192, 214, 243);
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     z-index: 1;
-  }
-  
-  /* Estilo para los enlaces dentro del dropdown */
-  .dropdown-content a {
+}
+
+/* Estilo para los enlaces dentro del dropdown */
+.dropdown-content a {
     color: black;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
     border-radius: 5px;
-  }
-  
-  /* Cambia el color del enlace cuando se pasa el cursor */
-  .dropdown-content a:hover {
-    background-color: rgb(155, 178, 207);
-  }
-  
-  /* Mostrar el contenido del dropdown cuando se pasa el cursor por el contenedor */
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
-  
-  /* Cambiar el color del botón cuando el dropdown está visible */
-  .dropdown:hover .dropdown-button {
-    box-shadow: 1px 1px 10px rgb(192, 214, 243);
-  }
-  
+}
 
-.all-ebooks{
+/* Cambia el color del enlace cuando se pasa el cursor */
+.dropdown-content a:hover {
+    background-color: rgb(155, 178, 207);
+}
+
+/* Mostrar el contenido del dropdown cuando se pasa el cursor por el contenedor */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Cambiar el color del botón cuando el dropdown está visible */
+.dropdown:hover .dropdown-button {
+    box-shadow: 1px 1px 10px rgb(192, 214, 243);
+}
+
+.all-ebooks {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -183,57 +190,6 @@
     border-radius: 4px;
 }
 
-.ebook-card{
-    display: flex;
-    flex-direction: column;
-    border: 1px solid rgb(192, 192, 192);
-    border-radius: 5px;
-    width: 380px;
-    height: 170px;
-    padding: 10px;
-    justify-content: space-between;
-    background-color: white;
-}
-
-.ebook-card-tags{
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.ebook-card-tags p{
-    margin: 0;
-    margin-bottom: 10px;
-}
-
-.ebook-card-data{
-    display: flex;
-    flex-direction: row;
-}
-
-.ebook-card-data h4{
-    margin: 0;
-    margin-bottom: 15px;
-}
-
-.ebook-card-data p{
-    margin: 0;
-}
-
-.home h1{
-    text-align: center;
-}
-
-.home .ebook-card-data-front-ebook{
-    width: 80px;
-    height: 110px;
-    border-radius: 3px;
-    object-fit: cover;
-}
-
-.ebook-card-titleAndDescription{
-    display: flex;
-    flex-direction: column;
-    width: 320px;
+.home h1 {
     text-align: center;
 }

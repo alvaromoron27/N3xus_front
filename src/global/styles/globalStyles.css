@@ -13,22 +13,41 @@
     font-family: 'regular';
 }
 
-.ebook-category-tecnologia{
+.ebook-category{
     display: flex;
     justify-content: center;
     padding: 2px;
     background-color: #71eaff;
     border-radius: 5px;
     height: 25px;
-    color: rgb(4, 1, 34);
+    color: rgb(0, 0, 0);
+    width: fit-content;
 }
 
-.ebook-autor{
-    display: flex;
-    justify-content: center;
-    padding: 4px;
-    background-color: #d6d6d6;
-    border-radius: 5px;
-    height: 25px;
-    color: rgb(0, 0, 0);
+.Educación{
+    background-color: #ffff00;
+}
+
+.Mitología{
+    background-color: rgb(209, 177, 119);
+}
+
+.Ciencia{
+    background-color: rgb(6, 216, 6);
+}
+
+.Arte{
+    background-color: pink;
+}
+
+.Deporte{
+    background-color: rgb(216, 138, 22);
+}
+
+.Fantasía{
+    background-color: rgb(230, 93, 230);
+}
+
+.Autoayuda{
+    background-color: #da4f37;
 }

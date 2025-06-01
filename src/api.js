@@ -86,10 +86,20 @@ export const resetPassword = async (token, newPassword) => {
   }
 };
 
+export const confirmAccount = async (token) => {
+  try{
+    const response = await axiosInstance.post('/confirm-account', { token });
+    return response;
+  } catch (error) {
+    console.error("Error al confirmar la cuenta:", error);
+    throw error;
+  }
+}
+
 // Función para agregar un nuevo ebook
-export const addEbook = async (ebookData) => {
+export const addBook = async (bookData) => {
   try {
-    const response = await axiosInstance.post('/addEbook', ebookData);
+    const response = await axiosInstance.post('/addBook', bookData);
     return response.data;
   } catch (error) {
     console.error('Error al agregar el ebook:', error);
@@ -98,9 +108,9 @@ export const addEbook = async (ebookData) => {
 };
 
 // Función para obtener todos los ebooks
-export const getAllEbooks = async () => {
+export const getAllBooks = async () => {
   try {
-    const response = await axiosInstance.get('/allEbooks');
+    const response = await axiosInstance.get('/allBooks');
     return response.data; // Devuelve los datos de todos los ebooks
   } catch (error) {
     console.error('Error obteniendo ebooks:', error);
@@ -109,9 +119,9 @@ export const getAllEbooks = async () => {
 };
 
 // Función para obtener los ebooks de las últimas 24 horas
-export const getNewsEbooks = async () => {
+export const getNewsBooks = async () => {
   try {
-    const response = await axiosInstance.get('/newsEbooks');
+    const response = await axiosInstance.get('/newsBooks');
     return response.data; // Devuelve los datos de los ebooks nuevos
   } catch (error) {
     console.error('Error obteniendo ebooks nuevos:', error);
@@ -120,17 +130,66 @@ export const getNewsEbooks = async () => {
 };
 
 // Función para obtener ebooks por categoría
-export const getEbooksByCategory = async (categoria) => {
+export const getBooksByCategory = async (categoria) => {
   try {
     if (!categoria) {
       throw new Error('La categoría es requerida');
     }
-    const response = await axiosInstance.get('/ebooksByCategory', {
+    const response = await axiosInstance.get('/booksByCategory', {
       params: { categoria }
     });
     return response.data; // Devuelve los datos de los ebooks por categoría
   } catch (error) {
     console.error('Error obteniendo ebooks por categoría:', error);
     throw error; // Propaga el error para manejo en el lugar de llamada
+  }
+};
+
+// Función para guardar un ebook para un usuario
+export const saveBook = async (userId, bookId) => {
+  try {
+    const response = await axiosInstance.post('/save-book', {
+      user_id: userId,
+      book_id: bookId
+    });
+    return response.data; // Devuelve los datos de la respuesta
+  } catch (error) {
+    console.error('Error al guardar el ebook:', error);
+    throw error; // Propaga el error para manejo en el lugar de llamada
+  }
+};
+
+// Función para eliminar un ebook guardado
+export const removeSavedBook = async (userId, bookId) => {
+  try {
+    const response = await axiosInstance.delete(`/deleteSavedBook`, {
+      data: { user_id: userId, book_id: bookId }, // Enviar los datos en el cuerpo de la solicitud DELETE
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error eliminando el book guardado:', error);
+    return { success: false, message: 'Error eliminando el book guardado.' };
+  }
+};
+
+// Función para obtener los ebooks subidos por un usuario
+export const getBooksByUser = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/getBooksByUser/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener los ebooks del usuario:', error);
+    throw error;
+  }
+};
+
+// Función para eliminar un ebook
+export const deleteBook = async (bookId) => {
+  try {
+    const response = await axiosInstance.delete(`/deleteBook/${bookId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al eliminar el ebook:', error);
+    throw error;
   }
 };

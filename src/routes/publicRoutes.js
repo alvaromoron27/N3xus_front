@@ -1,16 +1,11 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../services/authContext';
+import { useSelector } from 'react-redux';
 
 const PublicRoute = ({ element }) => {
-    const { isAuthenticated, loading  } = useAuth();
-    
-    if (loading) {
-        
-        return <div>Loading...</div>;
-    }
-
-    return !isAuthenticated ? element : <Navigate to="/" />;
-};
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  
+    return isAuthenticated ? <Navigate to="/" /> : element;
+  };
 
 export default PublicRoute;

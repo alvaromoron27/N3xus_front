@@ -1,9 +1,13 @@
 header{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100vw;
     min-height: 90px;
+    height: 90px;
     background-color: rgb(7, 7, 37);
     border-radius: 0px 0px 10px 10px;
     backdrop-filter: blur(4px);
@@ -25,10 +29,6 @@ header a:hover{
 
 .active {
     color: yellow;
-}
-
-.header-icon-cart{
-    margin-top: 7px;
 }
 
 header a img{

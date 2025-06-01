@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import "./styleLogin.css";
-import "../../../global/styles/globalStyles.css"
+import "../../../global/styles/globalStyles.css";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useAuth } from "../../../services/authContext.js";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../../redux/reducers/authReducer.js";
 import {
   recoverPassword,
   resendConfirmationEmail,
@@ -14,47 +15,58 @@ import {
 import Header from "../../../components/global/header/header.jsx";
 
 function Login() {
-  const { login } = useAuth();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isConfirmedAccount = useSelector((state) => state.auth.isConfirmedAccount);
   const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState("");
   const [visibilityPasswd, setVisibilityPasswd] = useState(false);
   const [showConfirmationMessage, setShowConfirmationMessage] = useState(false);
+  const [showConfirmationMessageSuccesfull, setShowConfirmationMessageSuccesfull] = useState(false);
   const [showResetMessage, setShowResetMessage] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(120); // Tiempo restante para el contador
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const savedTime = localStorage.getItem("resendTimer");
+    return savedTime ? parseInt(savedTime, 10) : 180; // 180 segundos = 3 minutos
+  });
+  const [isDisabled, setIsDisabled] = useState(() => {
+    const savedTime = localStorage.getItem("resendTimer");
+    return savedTime && parseInt(savedTime, 10) > 0;
+  });
 
   const formik = useFormik({
     initialValues: {
-      correo: "",
+      identificador: "",
       contraseña: "",
     },
     validationSchema: Yup.object({
-      correo: Yup.string()
-        .email("Correo inválido")
-        .required("El correo es obligatorio"),
+      identificador: Yup.string()
+        .required("El identificador es obligatorio"),
       contraseña: Yup.string().required("La contraseña es obligatoria"),
     }),
     onSubmit: async (values, { setSubmitting, setErrors, setFieldError }) => {
       try {
         const userData = await loginUser(values);
-        login(userData);
+        dispatch(login(userData));
         navigate("/");
       } catch (error) {
         console.error("Error al iniciar sesión:", error);
 
         if (error.response && error.response.data.unconfirmed) {
           // La cuenta no está confirmada
-          // Enviar el correo de confirmación
-          await handleResendConfirmation(values.correo);
-          setShowConfirmationMessage(true);
-          setError(
-            "Tu cuenta no está confirmada. Se ha enviado un correo de confirmación a tu dirección de email."
-          );
-        } else if(error.response.data.message === 'Usuario no encontrado'){
-          setFieldError('general', 'El correo o la contraseña son incorrectos');
-        }else if(error.response.status === 404){
-          setFieldError('general', 'Error en la base de datos');
+          if (timeLeft <= 0) {  // Verificar el tiempo restante antes de enviar el correo
+            await handleResendConfirmation(values.identificador);
+            setShowConfirmationMessage(true);
+            setError(
+              "Tu cuenta no está confirmada. Se ha enviado un correo de confirmación a tu dirección de email."
+            );
+          } else {
+            setShowConfirmationMessage(true);
+          }
+        } else if (error.response.data.message === "Usuario no encontrado") {
+          setFieldError("general", "El identificador o la contraseña son incorrectos");
+        } else if (error.response.status === 404) {
+          setFieldError("general", "Error en la base de datos");
         } else {
           // Mostrar error de credenciales
           setError(
@@ -82,17 +94,51 @@ function Login() {
   }, []);
 
   useEffect(() => {
-    if (timeLeft === 0) {
-      setIsDisabled(false); // Habilitar el botón cuando el tiempo llegue a 0
-      return;
+    // Cada vez que se monta el componente, comienza el contador si hay tiempo restante
+    if (timeLeft > 0) {
+      const timerId = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          const newTime = prevTime - 1;
+          localStorage.setItem("resendTimer", newTime); // Actualizar el tiempo restante en localStorage
+          if (newTime <= 0) {
+            clearInterval(timerId);
+            setIsDisabled(false); // Habilitar el botón cuando el tiempo llegue a 0
+          }
+          return newTime;
+        });
+      }, 1000);
+
+      return () => clearInterval(timerId); // Limpiar el intervalo cuando se desmonta o reinicia
     }
-
-    const timerId = setTimeout(() => {
-      setTimeLeft(timeLeft - 1);
-    }, 1000);
-
-    return () => clearTimeout(timerId); // Limpiar el timeout cuando se desmonta o reinicia
   }, [timeLeft]);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const stateFromLocalStorage = JSON.parse(localStorage.getItem('persist:root'));
+      const authState = JSON.parse(stateFromLocalStorage.auth);
+      
+      if (authState.isConfirmedAccount) {
+        setShowConfirmationMessage(false);
+        setShowConfirmationMessageSuccesfull(true);
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    // Cleanup function para remover el event listener cuando el componente se desmonta
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  useEffect(() => {
+    if(isConfirmedAccount){
+      setShowConfirmationMessage(false)
+      setShowConfirmationMessageSuccesfull(true)
+    }
+  }, [isConfirmedAccount]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleRegisterClick = (e) => {
     e.preventDefault();
@@ -113,7 +159,7 @@ function Login() {
       try {
         await recoverPassword(emailResetPassword);
         // Deshabilitar el botón y comenzar el contador
-        setTimeLeft(120); // 2 minutos
+        setTimeLeft(180); // 3 minutos
         setIsDisabled(true);
       } catch (error) {
         console.error("Error al enviar la solicitud:", error);
@@ -123,12 +169,13 @@ function Login() {
 
   const handleResendConfirmation = async () => {
     try {
-      await resendConfirmationEmail(formik.values.correo);
+      await resendConfirmationEmail(formik.values.identificador);
       setError(
         "Correo de confirmación reenviado. Por favor, verifica tu bandeja de entrada."
       );
-      setTimeLeft(120); // Reiniciar el contador a 2 minutos
+      setTimeLeft(180); // Reiniciar el contador a 3 minutos
       setIsDisabled(true); // Deshabilitar el botón
+      localStorage.setItem("resendTimer", 180);
     } catch (error) {
       setError(
         "Error al reenviar el correo de confirmación. Inténtalo de nuevo."
@@ -158,10 +205,12 @@ function Login() {
                   {("0" + (timeLeft % 60)).slice(-2)})
                 </span>
               )}
-              <br />
-              <br />
-              Una vez que confirmes tu cuenta, recarga la página e inicia sesión.
             </p>
+          </div>
+        )}
+        {showConfirmationMessageSuccesfull && (
+          <div className="confirmation">
+            <p>Su cuenta se ha confirmado correctamente, ya puede iniciar sesión</p>
           </div>
         )}
         {showResetMessage && (
@@ -192,12 +241,12 @@ function Login() {
                 <input
                   className="input"
                   type="text"
-                  name="correo"
-                  placeholder="Email"
-                  {...formik.getFieldProps("correo")}
+                  name="identificador"
+                  placeholder="Usuario o Email"
+                  {...formik.getFieldProps("identificador")}
                   style={{
                     borderColor:
-                      formik.touched.correo && formik.errors.correo
+                      formik.touched.identificador && formik.errors.identificador
                         ? "red"
                         : "",
                   }}
@@ -214,8 +263,8 @@ function Login() {
                   />
                 </svg>
               </div>
-              {formik.touched.correo && formik.errors.correo && (
-                <p className="error-message">{formik.errors.correo}</p>
+              {formik.touched.identificador && formik.errors.identificador && (
+                <p className="error-message">{formik.errors.identificador}</p>
               )}
             </div>
             <div>
@@ -228,7 +277,7 @@ function Login() {
                   {...formik.getFieldProps("contraseña")}
                   style={{
                     borderColor:
-                      formik.touched.correo && formik.errors.correo
+                      formik.touched.identificador && formik.errors.identificador
                         ? "red"
                         : "",
                   }}
@@ -272,10 +321,17 @@ function Login() {
               <p onClick={handleRecoveryClick}>He olvidado mi contraseña</p>
             </div>
             <div>
-              <input className="buttonAuth" type="submit" value="Login" disabled={showConfirmationMessage}/>
+              <input
+                className="buttonAuth"
+                type="submit"
+                value="Login"
+                disabled={showConfirmationMessage}
+              />
             </div>
           </form>
-          {formik.errors.general && <p className="error-message">{formik.errors.general}</p>}
+          {formik.errors.general && (
+            <p className="error-message">{formik.errors.general}</p>
+          )}
           <p className="linkRegister">
             Si aun no tienes cuenta{" "}
             <a href="#" onClick={handleRegisterClick}>

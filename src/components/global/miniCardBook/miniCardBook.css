@@ -1,0 +1,107 @@
+.ebook-card {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid rgb(192, 192, 192);
+    border-radius: 5px;
+    width: 430px;
+    height: 170px;
+    justify-content: space-between;
+    background-color: white;
+    box-shadow: 0 0 10px #383838;
+    word-break: break-word;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.ebook-miniCard-data-front-ebook {
+    width: 115px;
+    height: 100%;
+    border-radius: 3px;
+    object-fit: cover;
+}
+
+.ebook-card:hover {
+    transform: translateY(-7px);
+    /* Eleva la card al hacer hover */
+    box-shadow: 0 0 16px #383838;
+    /* Aumenta la sombra para efecto */
+}
+
+.ebook-card-title {
+    display: block;
+    /* Asegura que sea un contenedor de bloque */
+    white-space: nowrap;
+    /* No permite el salto de línea */
+    overflow: hidden;
+    /* Oculta el texto que se desborda */
+    text-overflow: ellipsis;
+    /* Muestra puntos suspensivos al final */
+    margin-top: 0;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.ebook-card-description {
+    display: -webkit-box;
+    /* Para navegadores WebKit (Safari, Chrome) */
+    -webkit-box-orient: vertical;
+    /* Para navegadores WebKit */
+    box-orient: vertical;
+    /* Propiedad estándar */
+    -webkit-line-clamp: 3;
+    /* Limita el texto a 3 líneas en navegadores WebKit */
+    line-clamp: 3;
+    /* Propiedad estándar para limitar el texto a 3 líneas */
+    overflow: hidden;
+    /* Oculta el texto que se desborda */
+    text-overflow: ellipsis;
+    /* Añade puntos suspensivos al final del texto que no cabe */
+}
+
+.ebook-card-autor {
+    display: block;
+    padding: 2px;
+    background-color: #203169;
+    border-radius: 5px;
+    height: 25px;
+    color: rgb(255, 255, 255);
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+
+.ebook-card-tags {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.ebook-card-tags p {
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.ebook-card-data {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.ebook-card-data h4 {
+    margin: 0;
+    margin-bottom: 15px;
+}
+
+.ebook-card-data p {
+    margin: 0;
+}
+
+.ebook-card-titleAndDescription {
+    display: flex;
+    flex-direction: column;
+    width: 295px;
+    text-align: center;
+    padding: 10px;
+}

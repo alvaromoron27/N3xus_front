@@ -7,14 +7,18 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { registerUser } from '../../../api.js';
 import Header from '../../../components/global/header/header.jsx';
+import { useDispatch } from 'react-redux';
+import { register } from '../../../redux/reducers/authReducer.js';
 
 const Register = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [visibilityPasswd, setVisibilityPasswd] = useState(false);
 
   const formik = useFormik({
     initialValues: {
+      usuario: '',
       nombre: '',
       apellidos: '',
       correo: '',
@@ -22,11 +26,18 @@ const Register = () => {
       confirmarContraseña: '',
     },
     validationSchema: Yup.object({
-      nombre: Yup.string().required('El nombre es obligatorio'),
-      apellidos: Yup.string().required('Los apellidos son obligatorios'),
+      usuario: Yup.string()
+      .required('El usuario es obligatorio')
+      .max(15, 'El usuario debe tener como máximo 15 caracteres')
+      .matches(/^[^\s]+$/, 'El usuario no puede contener espacios'),
+      nombre: Yup.string().required('El nombre es obligatorio')
+      .max(25, 'El nombre debe tener como máximo 25 caracteres'),
+      apellidos: Yup.string().required('Los apellidos son obligatorios')
+      .max(30, 'Los apellidos deben tener como máximo 30 caracteres'),
       correo: Yup.string().email('Correo electrónico inválido').required('El correo es obligatorio'),
       contraseña: Yup.string()
         .min(8, 'La contraseña debe tener al menos 8 caracteres')
+        .max(16, 'La contraseña debe tener como máximo 16 caracteres')
         .matches(/[a-z]/, 'Debe contener al menos una minúscula')
         .matches(/[A-Z]/, 'Debe contener al menos una mayúscula')
         .matches(/\d/, 'Debe contener al menos un número')
@@ -39,14 +50,25 @@ const Register = () => {
     onSubmit: async (values, { setSubmitting, setErrors, setFieldError }) => {
       try {
         await registerUser(values);
+        dispatch(register())
         localStorage.setItem('showConfirmationMessage', 'true');
         navigate('/login');
       } catch (error) {
         console.error('Error registrando usuario:', error.response);
         if (error.response && error.response.status === 409) {
-          setFieldError('correo', 'El correo electrónico ya está registrado.');
+          // Verificar si el mensaje de error es sobre el email o el usuario
+          const errorMessage = error.response.data.message;
+    
+          if (errorMessage.includes('correo')) {
+            setFieldError('correo', 'El correo electrónico ya está registrado.');
+          } else if (errorMessage.includes('usuario')) {
+            setFieldError('usuario', 'El nombre de usuario ya está registrado.');
+          } else {
+            setErrors({ general: 'Error en la base de datos, por favor, inténtelo de nuevo más tarde.' });
+          }
         } else {
-          setErrors({ general: 'Error en la base de datos, por favor, inténtelo de nuevo mas tarde.' });
+          // Para cualquier otro tipo de error
+          setErrors({ general: 'Error en la base de datos, por favor, inténtelo de nuevo más tarde.' });
         }
       } finally {
         setSubmitting(false);
@@ -68,6 +90,20 @@ const Register = () => {
       <Header />
       <form className='register_form' onSubmit={formik.handleSubmit}>
         <h1>Registro</h1>
+        <div>
+          <div className="register_form_inputs">
+            <input
+              className='input'
+              type='text'
+              name='usuario'
+              placeholder='Usuario'
+              {...formik.getFieldProps('usuario')}
+              style={{ borderColor: formik.touched.usuario && formik.errors.usuario ? 'red' : '' }}
+            />
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256"><path fill="currentColor" d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56" /></svg>
+          </div>
+          {formik.touched.usuario && formik.errors.usuario && <p className="error-message">{formik.errors.usuario}</p>}
+        </div>
         <div>
           <div className="register_form_inputs">
             <input

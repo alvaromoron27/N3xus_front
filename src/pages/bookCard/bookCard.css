@@ -1,0 +1,101 @@
+.ebook-card-data-front-ebook{
+    width: 300px;
+    height: 440px;
+    border-radius: 3px;
+    object-fit: cover;
+}
+
+.ebookCard {
+    display: flex;
+    width: 80%;
+    padding: 20px; /* Espacio interno para respirar */
+    border-radius: 8px; /* Bordes redondeados */
+    background-color: #ffffff; /* Fondo blanco */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave para profundidad */
+    margin: 20px auto; /* Centramos la card horizontalmente */
+    transition: transform 0.3s, box-shadow 0.3s; /* Animación para interactividad */
+    font-family: Arial, sans-serif; /* Fuente limpia */
+  }
+
+  .ebookCard-portAndButtons{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ebookCard-portAndButtons button{
+    margin-top: 20px;
+  }
+
+  .ebookCard-saveEbook{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    height: 35px;
+    transition: all 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+
+  .ebookCard-saveEbook:hover{
+    box-shadow: 0 0 10px black;
+  }
+
+  .ebookCard-right{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .ebookCard-data{
+    margin-top: 20px;
+    margin-left: 20px;
+    word-break: break-all;
+  }
+  
+  .ebookCard p {
+    margin: 8px 0; /* Espacio entre párrafos */
+    color: #333; /* Color del texto más oscuro */
+    line-height: 1.5; /* Altura de línea para mejor legibilidad */
+    font-style: italic;
+  }
+  
+  .ebookCard p:nth-of-type(1) {
+    font-weight: bold; /* Hace el título más prominente */
+    font-size: 18px; /* Tamaño de fuente más grande para el título */
+    color: #0c0c0c; /* Color de texto diferente para el título */
+    margin-bottom: 10px; /* Más espacio debajo del título */
+  }
+  
+  .ebookCard p:nth-of-type(2) {
+    font-size: 14px; /* Tamaño de fuente más pequeño para la descripción */
+    color: #555; /* Color de texto más tenue */
+    margin-bottom: 15px; /* Espacio adicional debajo de la descripción */
+  }
+  
+  .ebookCard p:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .ebookCard-deleteBook{
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    height: 30px;
+    margin-top: 20px;
+  }
+  
+  .button-deleteBook{
+    background-color: red;
+    border-radius: 10px;
+    height: 30px;
+    width: 100px;
+    transition: all 0.2s ease-in-out;
+    font-weight: bold;
+  }
+
+  .button-deleteBook:hover{
+    box-shadow: 1px 1px 10px red;
+  }

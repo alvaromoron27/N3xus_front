@@ -1,14 +1,18 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import './styleHeader.css';
-import { useNavigate, useLocation } from 'react-router-dom'; // Importa useLocation
-import { useAuth } from '../../../services/authContext';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../../../redux/reducers/authReducer';
+import { clearStateEbookSelected } from '../../../redux/reducers/bookReducer';
 import logo from '../../../assets/portadaN3xus.png';
 
 function Header() {
     const navigate = useNavigate();
     const location = useLocation(); // Obtén la ubicación actual
-    const { isAuthenticated, logout } = useAuth();
+    const dispatch = useDispatch();
+
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
     const handleNavigation = (path) => (e) => {
         e.preventDefault();
@@ -17,6 +21,13 @@ function Header() {
 
     // Función para determinar si la ruta está activa
     const isActive = (path) => location.pathname === path;
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+        dispatch(logout()); // Despacha la acción de logout
+        dispatch(clearStateEbookSelected());
+        navigate('/'); // Redirige al usuario a la página de inicio después de cerrar sesión
+    };
 
     return (
         <header>
@@ -32,8 +43,7 @@ function Header() {
             ) : (
                 <>
                     <a href="#" onClick={handleNavigation('/profile')} className={isActive('/profile') ? 'active' : ''}>Perfil</a>
-                    <a href="#" onClick={(e) => { logout(); navigate('/'); }} className={isActive('/logout') ? 'active' : ''}>Cerrar sesión</a>
-                    <a href="#" onClick={handleNavigation('/cart')} className='header-icon-cart'><svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 1024 1024"><path fill={isActive('/cart') ? 'yellow' : 'white'} d="M1015.66 284a31.82 31.82 0 0 0-25.998-13.502H310.526l-51.408-177.28c-20.16-69.808-68.065-77.344-87.713-77.344H34.333c-17.569 0-31.777 14.224-31.777 31.776S16.78 79.425 34.332 79.425h137.056c4.336 0 17.568 0 26.593 31.184l176.848 649.936c3.84 13.712 16.336 23.183 30.591 23.183h431.968c13.409 0 25.376-8.4 29.905-21.024l152.256-449.68c3.504-9.744 2.048-20.592-3.888-29.024zM815.026 720.194H429.539L328.387 334.066h616.096zM752.003 848.13c-44.192 0-80 35.808-80 80s35.808 80 80 80s80-35.808 80-80s-35.808-80-80-80m-288 0c-44.192 0-80 35.808-80 80s35.808 80 80 80s80-35.808 80-80s-35.808-80-80-80"/></svg></a>
+                    <a href="#" onClick={handleLogout} className={isActive('/logout') ? 'active' : ''}>Cerrar sesión</a>
                 </>
             )}
             </div>
