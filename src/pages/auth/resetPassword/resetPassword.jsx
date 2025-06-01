@@ -5,16 +5,17 @@ import "../../../global/styles/globalStyles.css";
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { resetPassword } from "../../../api";
+import { useNavigate } from "react-router-dom";
 
 function ResetPassword() {
   const [visibilityPasswd, setVisibilityPasswd] = useState(false);
   const [isValidToken, setIsValidToken] = useState(false);
   const [disabled, setDisabled] = useState(false);
-  const [succesfullMessage, setSuccesfullMessage] = useState(false)
+  const [succesfullMessage, setSuccesfullMessage] = useState(false);
   const { token } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-
     // Lógica de validación del token
     if (token && token.length === 64) {
       setIsValidToken(true);
@@ -41,8 +42,12 @@ function ResetPassword() {
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
         await resetPassword(token, values.contraseña);
-        setDisabled(true)
-        setSuccesfullMessage(true)
+        setDisabled(true);
+        setSuccesfullMessage(true);
+        // Espera 5 segundos (5000 milisegundos), luego redirige
+        setTimeout(() => {
+          navigate("/login");
+        }, 5000);
       } catch (error) {
         console.error("Error al cambiar la constraseña:", error);
       } finally {
@@ -60,12 +65,19 @@ function ResetPassword() {
       {succesfullMessage ? (
         <div className="reset-password-succesfullMessage">
           <p>
-          Su contraseña ha sido cambiada correctamente. Ya puede cerrar esta pestaña e iniciar sesión con su nueva contraseña.
+            Su contraseña ha sido cambiada correctamente. En unos instantes se redirigirá a la página de login.
           </p>
-        </ div>
-      ) : ('')}
+        </div>
+      ) : (
+        ""
+      )}
       {isValidToken ? (
-        <form className={`resetPassword_form ${succesfullMessage ? 'formDisplayNone' : ''}`} onSubmit={formik.handleSubmit} >
+        <form
+          className={`resetPassword_form ${
+            succesfullMessage ? "formDisplayNone" : ""
+          }`}
+          onSubmit={formik.handleSubmit}
+        >
           <h1>Establecer contraseña</h1>
           <div>
             <div className="resetPassword_form_inputs">
@@ -176,7 +188,12 @@ function ResetPassword() {
               )}
           </div>
           <div>
-            <input className="buttonAuth" type="submit" value="Cambiar" disabled={disabled} />
+            <input
+              className="buttonAuth"
+              type="submit"
+              value="Cambiar"
+              disabled={disabled}
+            />
           </div>
         </form>
       ) : (

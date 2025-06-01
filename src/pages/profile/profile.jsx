@@ -5,19 +5,82 @@ import { useSelector } from "react-redux";
 import ModalSavedBooks from "../../components/modals/modalSavedBooks/modalSavedBooks.jsx";
 import ModalUploadedBooks from "../../components/modals/modalUploadedBooks/modalUploadedBooks.jsx";
 import ModalDeleteAccount from "../../components/modals/modalDeleteAccount/modalDeleteAccount.jsx";
+import { editUsername } from "../../api.js";
 
 function Profile() {
   const user = useSelector((state) => state.auth.user);
   const [isEditingUser, setIsEditingUser] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingEmail, setIsEditingEmail] = useState(false);
+
+  const [tempUser, setTempUser] = useState(user.Usuario);
+  const [tempName, setTempName] = useState(`${user.Nombre} ${user.Apellidos}`);
+  const [tempEmail, setTempEmail] = useState(user.Correo);
+
   const [modalSavedEbookOpen, setModalSavedEbookOpen] = useState(false);
   const [modalUploadedEbookOpen, setModalUploadedEbookOpen] = useState(false);
   const [modalDeleteAccountOpen, setModalDeleteAccountOpen] = useState(false);
 
-  const handleEditEmail = () => {
-          setIsEditingEmail(!isEditingEmail)
-      };
+  const handleEditUser = async (field) => {
+    switch (field) {
+      case "username":
+        if (isEditingUser) {
+          // Guardar cambios
+          const result = await editUsername(user.Id, tempUser);
+
+          if (result.status === 200) {
+            // Actualiza el estado si la operación es exitosa
+            console.log("Nombre de usuario editado con exito!")
+          }
+        } else {
+          // Entrando en edición, sincronizamos el temp con valor actual
+          setTempUser(user.Usuario);
+        }
+        setIsEditingUser(!isEditingUser);
+        break;
+      case "name":
+        if (isEditingName) {
+          // Guardar cambios: dividir nombre y apellidos
+          const [Nombre, ...Apellidos] = tempName.trim().split(" ");
+          // Actualizar estado o redux
+          console.log("Guardando Nombre:", Nombre, Apellidos.join(" "));
+        } else {
+          setTempName(`${user.Nombre} ${user.Apellidos}`);
+        }
+        setIsEditingName(!isEditingName);
+        break;
+      case "email":
+        if (isEditingEmail) {
+          // Guardar cambios
+          console.log("Guardando Email:", tempEmail);
+        } else {
+          setTempEmail(user.Correo);
+        }
+        setIsEditingEmail(!isEditingEmail);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleCancelEdit = (field) => {
+    switch (field) {
+      case "username":
+        setTempUser(user.Usuario);
+        setIsEditingUser(false);
+        break;
+      case "name":
+        setTempName(`${user.Nombre} ${user.Apellidos}`);
+        setIsEditingName(false);
+        break;
+      case "email":
+        setTempEmail(user.Correo);
+        setIsEditingEmail(false);
+        break;
+      default:
+        break;
+    }
+  };
 
   const handleDeleteAccountClick = async () => {
     setModalDeleteAccountOpen(!modalDeleteAccountOpen);
@@ -53,32 +116,75 @@ function Profile() {
         <div className="inputGroup">
           <input
             type="text"
-            value={user.Usuario}
-            disabled
+            value={tempUser}
+            onChange={(e) => setTempUser(e.target.value)}
+            disabled={!isEditingUser}
             className="profileInput"
           />
-          <button className="editButton">{isEditingUser ? 'Guardar' : 'Editar'}</button>
+          <button
+            className="editButton"
+            name="user"
+            onClick={() => handleEditUser("username")}
+          >
+            {isEditingUser ? "Guardar" : "Editar"}
+          </button>
+          {isEditingUser ? (
+            <button
+              className="cancelButton"
+              onClick={() => handleCancelEdit("username")}
+            >
+              Cancelar
+            </button>
+          ) : null}
         </div>
         <div className="inputGroup">
           <input
             type="text"
-            value={`${user.Nombre} ${user.Apellidos}`}
-            disabled
+            value={tempName}
+            onChange={(e) => setTempName(e.target.value)}
+            disabled={!isEditingName}
             className="profileInput"
           />
-          <button className="editButton">{isEditingName ? 'Guardar' : 'Editar'}</button>
+          <button
+            className="editButton"
+            name="name"
+            onClick={() => handleEditUser("name")}
+          >
+            {isEditingName ? "Guardar" : "Editar"}
+          </button>
+          {isEditingName ? (
+            <button
+              className="cancelButton"
+              onClick={() => handleCancelEdit("name")}
+            >
+              Cancelar
+            </button>
+          ) : null}
         </div>
         <div className="inputGroup">
           <input
             type="text"
             name="correo"
-            value={user.Correo}
-            disabled
+            value={tempEmail}
+            onChange={(e) => setTempEmail(e.target.value)}
+            disabled={!isEditingEmail}
             className="profileInput"
           />
-          <button className="editButton" name="correo" onClick={handleEditEmail}>
-            {isEditingEmail ? 'Guardar' : 'Editar'}
+          <button
+            className="editButton"
+            name="correo"
+            onClick={() => handleEditUser("email")}
+          >
+            {isEditingEmail ? "Guardar" : "Editar"}
           </button>
+          {isEditingEmail ? (
+            <button
+              className="cancelButton"
+              onClick={() => handleCancelEdit("email")}
+            >
+              Cancelar
+            </button>
+          ) : null}
         </div>
       </div>
       <div className="profile_deleteAccount">

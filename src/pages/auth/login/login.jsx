@@ -63,7 +63,7 @@ function Login() {
           } else {
             setShowConfirmationMessage(true);
           }
-        } else if (error.response.data.message === "Usuario no encontrado") {
+        } else if (error.response.data.message === "Usuario no encontrado" || error.response.data.message === "Credenciales inválidas") {
           setFieldError("general", "El identificador o la contraseña son incorrectos");
         } else if (error.response.status === 404) {
           setFieldError("general", "Error en la base de datos");

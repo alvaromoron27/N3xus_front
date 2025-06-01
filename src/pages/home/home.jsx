@@ -14,7 +14,6 @@ function Home() {
   const [filteredEbooks, setFilteredEbooks] = useState([]);
   const [tagSelected, setTagSelected] = useState("news");
   const [selectedCategory, setSelectedCategory] = useState("Categorías");
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dataUser = useSelector((state) => state.auth);
   const [showModalAddEbook, setShowModalAddEbook] = useState(false);
 
@@ -30,6 +29,8 @@ function Home() {
     };
 
     fetchAllEbooks();
+    
+    //DATOS DEL USUARIO
     console.log(dataUser);
   }, [dataUser]);
 
@@ -185,7 +186,7 @@ function Home() {
             Todos
           </div>
         </div>
-        {isAuthenticated ? (
+        {dataUser.isAuthenticated ? (
           <button
             className="home-option-addEbook"
             onClick={() => setShowModalAddEbook(true)}

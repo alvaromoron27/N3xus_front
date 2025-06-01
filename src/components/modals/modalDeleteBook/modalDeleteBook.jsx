@@ -18,7 +18,7 @@ function ModalDeleteBook (props){
         setLoading(true);
         setError(null);
         try {
-            await deleteBook(props.bookId);
+            await deleteBook(props.bookId, props.userId);
             dispatch(deleteSavedBookReducer(bookSelected));
             setLoading(false);
             setSuccess('Libro eliminado satisfactoriamente');

@@ -168,6 +168,7 @@ function BookCard() {
         {modalDeleteBookOpen && (
           <ModalDeleteBook
             bookId={bookSelected.id}
+            userId={userId}
             onClose={handleDeleteBookClick}
           />
         )}
