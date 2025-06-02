@@ -101,12 +101,12 @@ function Home() {
     <div className="home">
       <Header />
       <div className="home-head">
-        <h1>Home</h1>
+        <h1>Libros</h1>
         <div className="input-wrapper">
           <input
             type="text"
             className="right-input"
-            placeholder="Buscar por Título o Autor"
+            placeholder="Busca por Título o Autor"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />

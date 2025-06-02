@@ -38,6 +38,10 @@ const authSlice = createSlice({
         state.canResend = true;
       }
     },
+    editUserField: (state, action) => {
+      const { field, value } = action.payload;
+      state.user[field] = value;
+    },
     addSavedBook: (state, action) => {
       if (state.user && state.user.LibrosGuardados) {
         state.user.LibrosGuardados.push(action.payload);
@@ -65,6 +69,7 @@ export const {
   confirmAccountReducer,
   sendConfirmationEmail,
   decrementResendTimer,
+  editUserField,
   addSavedBook,
   deleteSavedBookReducer,
 } = authSlice.actions;

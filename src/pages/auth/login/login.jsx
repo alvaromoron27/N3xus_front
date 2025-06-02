@@ -235,7 +235,7 @@ function Login() {
         )}
         <div className="formAndErrors">
           <form className="login_form" onSubmit={formik.handleSubmit}>
-            <h1>Login</h1>
+            <h1>Iniciar Sesión</h1>
             <div>
               <div className="login_form_inputs">
                 <input
@@ -318,13 +318,13 @@ function Login() {
               {formik.touched.contraseña && formik.errors.contraseña && (
                 <p className="error-message">{formik.errors.contraseña}</p>
               )}
-              <p onClick={handleRecoveryClick}>He olvidado mi contraseña</p>
+              <p className="forgotPassword" onClick={handleRecoveryClick}>He olvidado mi contraseña</p>
             </div>
             <div>
               <input
                 className="buttonAuth"
                 type="submit"
-                value="Login"
+                value="Acceder"
                 disabled={showConfirmationMessage}
               />
             </div>

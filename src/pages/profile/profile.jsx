@@ -1,13 +1,15 @@
 import "./styleProfile.css";
 import React, { useState } from "react";
 import Header from "../../components/global/header/header.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ModalSavedBooks from "../../components/modals/modalSavedBooks/modalSavedBooks.jsx";
 import ModalUploadedBooks from "../../components/modals/modalUploadedBooks/modalUploadedBooks.jsx";
 import ModalDeleteAccount from "../../components/modals/modalDeleteAccount/modalDeleteAccount.jsx";
+import {editUserField} from "../../redux/reducers/authReducer.js"
 import { editUsername, editName, editSurname, editEmail } from "../../api.js";
 
 function Profile() {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
   const [errorMsgUsername, setErrorMsgUsername] = useState("");
@@ -44,12 +46,12 @@ function Profile() {
             const result = await editUsername(user.Id, tempUsername); // leer el texto devuelto por el servidor
 
             if (result.status === 200) {
-              setSuccessMsgUsername(result.data);
+              setSuccessMsgUsername(result.data.res);
               setErrorMsgUsername("");
               setTimeout(() => setSuccessMsgUsername(""), 6000);
-              // Aquí podrías actualizar el estado global/user si lo necesitas
+              dispatch(editUserField({ field: "Usuario", value: result.data.Usuario }));
             } else {
-              setErrorMsgUsername(result.data); // ← aquí se guarda el error
+              setErrorMsgUsername(result.data.res); // ← aquí se guarda el error
               setSuccessMsgUsername(""); //Mensaje de success vacio
               setTimeout(() => setErrorMsgUsername(""), 6000);
               setTempUsername(user.Usuario);
@@ -78,12 +80,12 @@ function Profile() {
             const result = await editName(user.Id, tempName); // leer el texto devuelto por el servidor
 
             if (result.status === 200) {
-              setSuccessMsgName(result.data);
+              setSuccessMsgName(result.data.res);
               setErrorMsgName("");
               setTimeout(() => setSuccessMsgName(""), 6000);
-              // Aquí podrías actualizar el estado global/user si lo necesitas
+              dispatch(editUserField({ field: "Nombre", value: result.data.Nombre }));
             } else {
-              setErrorMsgName(result.data); // ← aquí se guarda el error
+              setErrorMsgName(result.data.res); // ← aquí se guarda el error
               setSuccessMsgName(""); //Mensaje de success vacio
               setTimeout(() => setErrorMsgName(""), 6000);
               setTempName(user.Nombre);
@@ -112,12 +114,13 @@ function Profile() {
             const result = await editSurname(user.Id, tempSurname); // leer el texto devuelto por el servidor
 
             if (result.status === 200) {
-              setSuccessMsgSurname(result.data);
+              setSuccessMsgSurname(result.data.res);
               setErrorMsgSurname("");
               setTimeout(() => setSuccessMsgSurname(""), 6000);
               // Aquí podrías actualizar el estado global/user si lo necesitas
+              dispatch(editUserField({ field: "Apellidos", value: result.data.Apellidos }));
             } else {
-              setErrorMsgSurname(result.data); // ← aquí se guarda el error
+              setErrorMsgSurname(result.data.res); // ← aquí se guarda el error
               setSuccessMsgSurname(""); //Mensaje de success vacio
               setTimeout(() => setErrorMsgSurname(""), 6000);
               setTempSurname(user.Apellidos);
@@ -146,12 +149,13 @@ function Profile() {
             const result = await editEmail(user.Id, tempEmail); // leer el texto devuelto por el servidor
 
             if (result.status === 200) {
-              setSuccessMsgEmail(result.data);
+              setSuccessMsgEmail(result.data.res);
               setErrorMsgEmail("");
               setTimeout(() => setSuccessMsgEmail(""), 6000);
               // Aquí podrías actualizar el estado global/user si lo necesitas
+              dispatch(editUserField({ field: "Correo", value: result.data.Correo }));
             } else {
-              setErrorMsgEmail(result.data); // ← aquí se guarda el error
+              setErrorMsgEmail(result.data.res); // ← aquí se guarda el error
               setSuccessMsgEmail(""); //Mensaje de success vacio
               setTimeout(() => setErrorMsgEmail(""), 6000);
               setTempEmail(user.Correo);

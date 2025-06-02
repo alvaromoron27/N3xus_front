@@ -18,15 +18,6 @@
     justify-content: center;
 }
 
-.home-head input {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-30%);
-    height: 32px;
-    width: 210px;
-}
-
 .input-wrapper {
     position: absolute;
     right: 20px;
@@ -34,12 +25,24 @@
     transform: translateY(-50%);
     display: flex;
     align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
 }
 
-.right-input {
+.home-head .input-wrapper input {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-30%);
+    height: 32px;
+    width: 210px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
     padding-right: 30px;
+    padding-left: 10px;
     /* Espacio para el icono */
-    height: 100%;
     box-sizing: border-box;
     outline: none;
     border-radius: 5px;
@@ -72,8 +75,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 30px;
-    min-width: 115px;
+    height: 38px;
+    min-width: 170px;
     margin: 40px;
     background-color: rgb(25, 25, 143);
     color: white;
@@ -81,7 +84,9 @@
     border: none;
     transition: all 0.2s ease-in-out;
     font-family: 'regular';
+    font-size: 17px;
     box-shadow: 1px 2px 3px rgb(0, 0, 0);
+    padding: 15px;
 }
 
 .home-options .home-option-addEbook:hover {
@@ -91,6 +96,7 @@
 .filter-ebooks {
     display: flex;
     flex-direction: row;
+    align-items: center;
     width: 100vw;
     height: 34px;
     padding: 20px;
@@ -99,7 +105,7 @@
 .filter-ebooks-tag {
     margin-left: 50px;
     background-color: rgb(192, 214, 243);
-    padding: 5px;
+    padding: 12px;
     border-radius: 10px;
     transition: all 0.1s;
 }
@@ -113,6 +119,9 @@
     transition: all 0.1s;
     cursor: pointer;
     border: 0px;
+    font-family: 'regular';
+    font-size: 16px;
+    padding: 12px;
 }
 
 .filter-ebooks-tag-news {
@@ -133,6 +142,7 @@
     box-shadow: 1px 1px 15px rgb(73, 73, 158);
     background-color: rgb(73, 73, 158);
     color: white;
+    padding: 12px;
 }
 
 .filter-ebooks-tag:hover {
