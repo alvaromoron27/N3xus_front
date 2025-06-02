@@ -1,7 +1,7 @@
 /* eslint-disable no-throw-literal */
 import axios from "axios";
 
-const baseURL = "http://localhost:3021/api";
+const baseURL = "http://192.168.0.12:3021/api";
 
 const axiosInstance = axios.create({
   baseURL,
@@ -101,15 +101,54 @@ export const confirmAccount = async (token) => {
   }
 };
 
-export const editUsername = async (userId, tempUser) => {
+export const editUsername = async (userId, tempUsername) => {
   try {
     const response = await axiosInstance.post("/edit-username", {
       user_id: userId,
-      username: tempUser,
+      username: tempUsername,
     });
     return response;
   } catch (error) {
     console.error("Error al editar el nombre de usuario:", error);
+    throw error;
+  }
+};
+
+export const editName = async (userId, tempName) => {
+  try {
+    const response = await axiosInstance.post("/edit-name", {
+      user_id: userId,
+      name: tempName,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al editar el nombre de usuario:", error);
+    throw error;
+  }
+};
+
+export const editSurname = async (userId, tempSurname) => {
+  try {
+    const response = await axiosInstance.post("/edit-surname", {
+      user_id: userId,
+      surname: tempSurname,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al editar el apellido:", error);
+    throw error;
+  }
+};
+
+export const editEmail = async (userId, tempEmail) => {
+  try {
+    const response = await axiosInstance.post("/edit-email", {
+      user_id: userId,
+      email: tempEmail,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al editar el apellido:", error);
     throw error;
   }
 };

@@ -50,13 +50,16 @@
   justify-content: center;
   gap: 15px;
   padding: 1rem;
-  max-width: 600px;
 }
 
 .inputGroup {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.inputGroup input{
+  max-width: 450px;
 }
 
 .profileInput {
@@ -126,4 +129,16 @@
   border-radius: 10px;
   border: 1px solid black;
   color: white;
+}
+
+.error-message-profile{
+  border: 1px solid red;
+  background-color: rgb(255, 186, 186);
+  border-radius: 10px;
+}
+
+.success-message-profile{
+  border: 1px solid green;
+  background-color: rgb(186, 255, 186);
+  border-radius: 10px;
 }
