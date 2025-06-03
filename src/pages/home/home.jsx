@@ -29,7 +29,7 @@ function Home() {
     };
 
     fetchAllEbooks();
-    
+
     //DATOS DEL USUARIO
     console.log(dataUser);
   }, [dataUser]);

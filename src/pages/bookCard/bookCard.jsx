@@ -10,6 +10,8 @@ import {
 } from "../../redux/reducers/authReducer";
 import ModalDeleteBook from "../../components/modals/modalDeleteBook/modalDeleteBook";
 
+import ModalAddBook from "../../components/modals/modalAddBook/modalAddBook";
+
 function BookCard() {
   const dispatch = useDispatch();
   const bookSelected = useSelector((state) => state.book.selectedBook);
@@ -20,6 +22,7 @@ function BookCard() {
     (state) => state.auth.user?.LibrosGuardados || []
   );
   const [uploadedByUser, setUploadedByUser] = useState(false);
+  const [modalEditBookOpen, setModalEditBookOpen] = useState(false);
   const [modalDeleteBookOpen, setModalDeleteBookOpen] = useState(false);
 
   useEffect(() => {
@@ -63,7 +66,11 @@ function BookCard() {
 
   function handleDeleteBookClick() {
     setModalDeleteBookOpen(!modalDeleteBookOpen);
-  }
+  };
+
+  function handleEditBookClick() {
+    setModalEditBookOpen(!modalEditBookOpen);
+  };
 
   return (
     <div className="container-EbookCard">
@@ -152,19 +159,144 @@ function BookCard() {
               Publicación original:{" "}
               {formatDate(bookSelected.publicacion_original)}
             </p>
-            <p>Subido a N3xus: {formatDate(bookSelected.created_at)}</p>
+            <p>Última modificación: {formatDate(bookSelected.created_at)}</p>
           </div>
           {uploadedByUser && (
-            <div className="ebookCard-deleteBook">
-              <button
-                className="button-deleteBook"
-                onClick={handleDeleteBookClick}
-              >
-                Eliminar libro
-              </button>
+            <div className="ebookCard-editAndDelete">
+              <div className="ebookCard-deleteBook">
+                <button
+                  className="button-editBook"
+                  onClick={handleEditBookClick}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="25"
+                    viewBox="0 0 24 24"
+                  >
+                    <g
+                      fill="rgb(15, 54, 138)"
+                      stroke="white"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1"
+                    >
+                      <path
+                        strokeDasharray="20"
+                        strokeDashoffset="20"
+                        d="M3 21h18"
+                      >
+                        <animate
+                          fill="freeze"
+                          attributeName="stroke-dashoffset"
+                          dur="0.2s"
+                          values="20;0"
+                        />
+                      </path>
+                      <path
+                        strokeDasharray="48"
+                        strokeDashoffset="48"
+                        d="M7 17v-4l10 -10l4 4l-10 10h-4"
+                      >
+                        <animate
+                          fill="freeze"
+                          attributeName="stroke-dashoffset"
+                          begin="0.2s"
+                          dur="0.6s"
+                          values="48;0"
+                        />
+                      </path>
+                      <path
+                        strokeDasharray="8"
+                        strokeDashoffset="8"
+                        d="M14 6l4 4"
+                      >
+                        <animate
+                          fill="freeze"
+                          attributeName="stroke-dashoffset"
+                          begin="0.8s"
+                          dur="0.2s"
+                          values="8;0"
+                        />
+                      </path>
+                    </g>
+                  </svg>
+                  Editar libro
+                </button>
+              </div>
+              <div className="ebookCard-deleteBook">
+                <button
+                  className="button-deleteBook"
+                  onClick={handleDeleteBookClick}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="25"
+                    viewBox="0 0 24 24"
+                  >
+                    <g
+                      fill="red"
+                      stroke="white"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1"
+                    >
+                      <path
+                        strokeDasharray="20"
+                        strokeDashoffset="20"
+                        d="M3 21h18"
+                      >
+                        <animate
+                          fill="freeze"
+                          attributeName="stroke-dashoffset"
+                          dur="0.2s"
+                          values="20;0"
+                        />
+                      </path>
+                      <path
+                        strokeDasharray="48"
+                        strokeDashoffset="48"
+                        d="M7 17v-4l10 -10l4 4l-10 10h-4"
+                      >
+                        <animate
+                          fill="freeze"
+                          attributeName="stroke-dashoffset"
+                          begin="0.2s"
+                          dur="0.6s"
+                          values="48;0"
+                        />
+                      </path>
+                      <path
+                        strokeDasharray="8"
+                        strokeDashoffset="8"
+                        d="M14 6l4 4"
+                      >
+                        <animate
+                          fill="freeze"
+                          attributeName="stroke-dashoffset"
+                          begin="0.8s"
+                          dur="0.2s"
+                          values="8;0"
+                        />
+                      </path>
+                    </g>
+                  </svg>
+                  Eliminar libro
+                </button>
+              </div>
             </div>
           )}
         </div>
+        {modalEditBookOpen && (
+          <ModalAddBook
+            titulo="Editar Libro"
+            bookData={bookSelected}
+            onClose={handleEditBookClick}
+            field= "Editar"
+            book_id={bookSelected.id}
+          />
+        )}
         {modalDeleteBookOpen && (
           <ModalDeleteBook
             bookId={bookSelected.id}

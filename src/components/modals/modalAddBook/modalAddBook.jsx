@@ -1,13 +1,20 @@
 import "./modalAddBook.css";
-import { useState } from "react";
-import { addBook } from "../../../api.js";
-import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { addBook, editBook } from "../../../api.js";
+import { useDispatch, useSelector } from "react-redux";
+import { editBookReducer } from "../../../redux/reducers/bookReducer.js";
 
-const ModalAddBook = ({ onClose }) => {
-
+const ModalAddBook = ({
+  onClose,
+  titulo = "Añadir Libro",
+  bookData = null,
+  book_id = null,
+  field = "añadir",
+}) => {
+  const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth.user.Id);
 
-  const [bookData, setBookData] = useState({
+  const [formData, setFormData] = useState({
     portada: "",
     titulo: "",
     descripcion: "",
@@ -15,27 +22,81 @@ const ModalAddBook = ({ onClose }) => {
     categoria: "",
     numero_paginas: "",
     publicacion_original: "",
-    user_id: userId
+    created_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+    user_id: userId,
   });
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    if (bookData) {
+      setFormData({
+        ...bookData,
+        created_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+        user_id: userId, // aseguramos consistencia
+      });
+    }
+  }, [bookData, userId]);
 
   const handleChange = (e) => {
-    setBookData({
-      ...bookData,
+    setFormData({
+      ...formData,
       [e.target.id]: e.target.value,
     });
+  };
+
+  // Función para convertir la fecha a formato MySQL DATETIME
+  const formatDateForMySQL = (dateString) => {
+    const date = new Date(dateString);
+    if (isNaN(date)) return ""; // Por si la fecha es inválida o vacía
+    return (
+      date.getFullYear() +
+      "-" +
+      String(date.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(date.getDate()).padStart(2, "0") +
+      " " +
+      String(date.getHours()).padStart(2, "0") +
+      ":" +
+      String(date.getMinutes()).padStart(2, "0") +
+      ":" +
+      String(date.getSeconds()).padStart(2, "0")
+    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      await addBook(bookData);
-      onClose(); // Cierra el modal después de guardar
-    } catch (error) {
-      if (error.response.data.message) {
-        setErrorMessage(error.response.data.message);
+ // Copia del formData para modificar la fecha sin mutar el estado
+    const dataToSend = {
+      ...formData,
+      publicacion_original: formatDateForMySQL(formData.publicacion_original),
+    };
+
+    if (field === "Editar") {
+      try {
+        const response = await editBook(dataToSend, book_id);
+        const { message, updatedBook } = response;
+        dispatch(editBookReducer(updatedBook));
+        setSuccessMessage(message);
+        // Cierra el modal tras 2 segundos
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+      } catch (error) {
+        if (error.response.data.message) {
+          setErrorMessage(error.response.data.message);
+        }
+      }
+    } else {
+      try {
+        await addBook(formData);
+        onClose(); // Cierra el modal después de guardar
+      } catch (error) {
+        if (error.response.data.message) {
+          setErrorMessage(error.response.data.message);
+        }
       }
     }
   };
@@ -43,7 +104,7 @@ const ModalAddBook = ({ onClose }) => {
   return (
     <div className="modal-overlay-addEbook">
       <div className="modal-content-addEbook">
-        <h2>Añadir Libro</h2>
+        <h2>{titulo}</h2>
         <form className="modal-content-addEbook-form" onSubmit={handleSubmit}>
           <div className="modal-content-addEbook-form-group">
             <label className="required-label" htmlFor="portada">
@@ -52,7 +113,7 @@ const ModalAddBook = ({ onClose }) => {
             <input
               type="text"
               id="portada"
-              value={bookData.portada}
+              value={formData.portada}
               onChange={handleChange}
               required
             />
@@ -65,7 +126,7 @@ const ModalAddBook = ({ onClose }) => {
             <input
               type="text"
               id="titulo"
-              value={bookData.titulo}
+              value={formData.titulo}
               onChange={handleChange}
               required
             />
@@ -78,7 +139,7 @@ const ModalAddBook = ({ onClose }) => {
             <input
               type="text"
               id="autor"
-              value={bookData.autor}
+              value={formData.autor}
               onChange={handleChange}
               required
             />
@@ -93,7 +154,7 @@ const ModalAddBook = ({ onClose }) => {
               id="descripcion"
               cols="40"
               rows="7"
-              value={bookData.descripcion}
+              value={formData.descripcion}
               onChange={handleChange}
               required
             ></textarea>
@@ -106,11 +167,11 @@ const ModalAddBook = ({ onClose }) => {
             <input
               type="number"
               id="numero_paginas"
-              value={bookData.numero_paginas}
+              value={formData.numero_paginas}
               onChange={handleChange}
               required
-              min='1'
-              max='5000'
+              min="1"
+              max="5000"
             />
           </div>
 
@@ -121,7 +182,7 @@ const ModalAddBook = ({ onClose }) => {
             <input
               type="date"
               id="publicacion_original"
-              value={bookData.publicacion_original}
+              value={formData.publicacion_original?.slice(0, 10)}
               onChange={handleChange}
               required
             />
@@ -134,7 +195,7 @@ const ModalAddBook = ({ onClose }) => {
             </label>
             <select
               id="categoria"
-              value={bookData.categoria}
+              value={formData.categoria}
               onChange={handleChange}
               required
             >
@@ -150,7 +211,10 @@ const ModalAddBook = ({ onClose }) => {
             </select>
           </div>
 
-          {errorMessage}
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
+          {successMessage && (
+            <div className="success-message">{successMessage}</div>
+          )}
 
           <div className="modal-content-addEbook-save">
             <button type="submit" className="modal-content-addEbook-buttonSave">

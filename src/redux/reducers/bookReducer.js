@@ -14,13 +14,17 @@ const bookSlice = createSlice({
     },
     clearStateEbookSelected: (state) => {
         state.selectedBook = null;
-    }
+    },
+    editBookReducer: (state, action) => {
+      state.selectedBook = action.payload;
+    },
   },
 });
 
 export const {
   selectBook,
-  clearStateEbookSelected
+  clearStateEbookSelected,
+  editBookReducer
 } = bookSlice.actions;
 
 export default bookSlice.reducer;

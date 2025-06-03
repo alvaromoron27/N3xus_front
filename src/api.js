@@ -164,6 +164,17 @@ export const addBook = async (bookData) => {
   }
 };
 
+// Función para editar un nuevo ebook
+export const editBook = async (bookData, book_id) => {
+  try {
+    const response = await axiosInstance.post(`/editBook/${book_id}`, bookData);
+    return response.data;
+  } catch (error) {
+    console.error("Error al editar el ebook:", error);
+    throw error;
+  }
+};
+
 // Función para obtener todos los ebooks
 export const getAllBooks = async () => {
   try {
