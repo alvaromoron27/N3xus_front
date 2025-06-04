@@ -17,13 +17,19 @@ import Header from "../../../components/global/header/header.jsx";
 function Login() {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const isConfirmedAccount = useSelector((state) => state.auth.isConfirmedAccount);
+  const isConfirmedAccount = useSelector(
+    (state) => state.auth.isConfirmedAccount
+  );
+  const [lastIdentificador, setLastIdentificador] = useState("");
   const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState("");
   const [visibilityPasswd, setVisibilityPasswd] = useState(false);
   const [showConfirmationMessage, setShowConfirmationMessage] = useState(false);
-  const [showConfirmationMessageSuccesfull, setShowConfirmationMessageSuccesfull] = useState(false);
+  const [
+    showConfirmationMessageSuccesfull,
+    setShowConfirmationMessageSuccesfull,
+  ] = useState(false);
   const [showResetMessage, setShowResetMessage] = useState(false);
   const [timeLeft, setTimeLeft] = useState(() => {
     const savedTime = localStorage.getItem("resendTimer");
@@ -40,11 +46,10 @@ function Login() {
       contraseña: "",
     },
     validationSchema: Yup.object({
-      identificador: Yup.string()
-        .required("El identificador es obligatorio"),
+      identificador: Yup.string().required("El identificador es obligatorio"),
       contraseña: Yup.string().required("La contraseña es obligatoria"),
     }),
-    onSubmit: async (values, { setSubmitting, setErrors, setFieldError }) => {
+    onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
         const userData = await loginUser(values);
         dispatch(login(userData));
@@ -52,27 +57,22 @@ function Login() {
       } catch (error) {
         console.error("Error al iniciar sesión:", error);
 
-        if (error.response && error.response.data.unconfirmed) {
-          // La cuenta no está confirmada
-          if (timeLeft <= 0) {  // Verificar el tiempo restante antes de enviar el correo
+        const response = error.response;
+        const unconfirmed = response?.data?.unconfirmed;
+        const message = response?.data?.message || "Error inesperado";
+
+        if (unconfirmed) {
+          if (timeLeft <= 0) {
+            console.log("Cuenta no confirmada. Intentando reenviar correo...");
             await handleResendConfirmation(values.identificador);
-            setShowConfirmationMessage(true);
-            setError(
-              "Tu cuenta no está confirmada. Se ha enviado un correo de confirmación a tu dirección de email."
-            );
           } else {
-            setShowConfirmationMessage(true);
+            console.log("Esperando para poder reenviar nuevamente.");
           }
-        } else if (error.response.data.message === "Usuario no encontrado" || error.response.data.message === "Credenciales inválidas") {
-          setFieldError("general", "El identificador o la contraseña son incorrectos");
-        } else if (error.response.status === 404) {
-          setFieldError("general", "Error en la base de datos");
+
+          setError(message); // <--- Esto te muestra el mensaje en UI
+          setShowConfirmationMessage(true);
         } else {
-          // Mostrar error de credenciales
-          setError(
-            "Error al iniciar sesión. Por favor, verifica tus credenciales."
-          );
-          setErrors({ general: "Error al iniciar sesión." });
+          setError(message); // <--- Error normal de login (credenciales, etc.)
         }
       } finally {
         setSubmitting(false);
@@ -114,23 +114,25 @@ function Login() {
 
   useEffect(() => {
     const handleStorageChange = () => {
-      const stateFromLocalStorage = JSON.parse(localStorage.getItem('persist:root'));
+      const stateFromLocalStorage = JSON.parse(
+        localStorage.getItem("persist:root")
+      );
       const authState = JSON.parse(stateFromLocalStorage.auth);
-      
+
       if (authState.isConfirmedAccount) {
         setShowConfirmationMessage(false);
         setShowConfirmationMessageSuccesfull(true);
       }
     };
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
     // Cleanup function para remover el event listener cuando el componente se desmonta
-    return () => window.removeEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   useEffect(() => {
-    if(isConfirmedAccount){
-      setShowConfirmationMessage(false)
-      setShowConfirmationMessageSuccesfull(true)
+    if (isConfirmedAccount) {
+      setShowConfirmationMessage(false);
+      setShowConfirmationMessageSuccesfull(true);
     }
   }, [isConfirmedAccount]);
 
@@ -139,6 +141,10 @@ function Login() {
       navigate("/");
     }
   }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    setLastIdentificador(formik.values.identificador);
+  }, [formik.values.identificador]);
 
   const handleRegisterClick = (e) => {
     e.preventDefault();
@@ -167,21 +173,27 @@ function Login() {
     }
   };
 
-  const handleResendConfirmation = async () => {
+  const handleResendConfirmation = async (identificador) => {
     try {
-      await resendConfirmationEmail(formik.values.identificador);
+      await resendConfirmationEmail(identificador);
       setError(
         "Correo de confirmación reenviado. Por favor, verifica tu bandeja de entrada."
       );
+      setShowConfirmationMessage(true);
       setTimeLeft(180); // Reiniciar el contador a 3 minutos
       setIsDisabled(true); // Deshabilitar el botón
       localStorage.setItem("resendTimer", 180);
     } catch (error) {
+      console.log(
+        "Error al reenviar el correo de confirmación. Inténtalo de nuevo."
+      );
       setError(
         "Error al reenviar el correo de confirmación. Inténtalo de nuevo."
       );
+      setShowConfirmationMessage(false);
     }
   };
+
   return (
     <div className="login">
       <Header />
@@ -196,7 +208,10 @@ function Login() {
               <br />
               <br />
               ¿No recibiste nuestro correo?{" "}
-              <button onClick={handleResendConfirmation} disabled={isDisabled}>
+              <button
+                onClick={() => handleResendConfirmation(lastIdentificador)}
+                disabled={isDisabled}
+              >
                 Reenviar
               </button>
               {isDisabled && (
@@ -210,7 +225,9 @@ function Login() {
         )}
         {showConfirmationMessageSuccesfull && (
           <div className="confirmation">
-            <p>Su cuenta se ha confirmado correctamente, ya puede iniciar sesión</p>
+            <p>
+              Su cuenta se ha confirmado correctamente, ya puede iniciar sesión
+            </p>
           </div>
         )}
         {showResetMessage && (
@@ -246,7 +263,8 @@ function Login() {
                   {...formik.getFieldProps("identificador")}
                   style={{
                     borderColor:
-                      formik.touched.identificador && formik.errors.identificador
+                      formik.touched.identificador &&
+                      formik.errors.identificador
                         ? "red"
                         : "",
                   }}
@@ -277,7 +295,8 @@ function Login() {
                   {...formik.getFieldProps("contraseña")}
                   style={{
                     borderColor:
-                      formik.touched.identificador && formik.errors.identificador
+                      formik.touched.identificador &&
+                      formik.errors.identificador
                         ? "red"
                         : "",
                   }}
@@ -318,7 +337,9 @@ function Login() {
               {formik.touched.contraseña && formik.errors.contraseña && (
                 <p className="error-message">{formik.errors.contraseña}</p>
               )}
-              <p className="forgotPassword" onClick={handleRecoveryClick}>He olvidado mi contraseña</p>
+              <p className="forgotPassword" onClick={handleRecoveryClick}>
+                He olvidado mi contraseña
+              </p>
             </div>
             <div>
               <input
@@ -332,6 +353,7 @@ function Login() {
           {formik.errors.general && (
             <p className="error-message">{formik.errors.general}</p>
           )}
+          {error && <p className="error-message">{error}</p>}
           <p className="linkRegister">
             Si aun no tienes cuenta{" "}
             <a href="#" onClick={handleRegisterClick}>

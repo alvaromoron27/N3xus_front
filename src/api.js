@@ -22,10 +22,10 @@ export const registerUser = async (userData) => {
 };
 
 // Función para reenviar correo de confirmación
-export const resendConfirmationEmail = async (correo) => {
+export const resendConfirmationEmail = async (identificador) => {
   try {
     const response = await axiosInstance.post("/resend-confirmation", {
-      correo,
+      identificador,
     });
     return response.data;
   } catch (error) {
