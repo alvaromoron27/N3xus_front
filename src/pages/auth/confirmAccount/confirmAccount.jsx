@@ -1,35 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import './confirmAccount.css';
-import { confirmAccount } from '../../../api';
-import { confirmAccountReducer } from '../../../redux/reducers/authReducer';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import "./confirmAccount.css";
+import { confirmAccount } from "../../../api";
+import { confirmAccountAction } from "../../../redux/reducers/authReducer";
+import { useDispatch } from "react-redux";
 
-function ConfirmAccount  () {
+function ConfirmAccount() {
+  const { token } = useParams();
+  const [message, setMessage] = useState(
+    "Cuenta confirmada correctamente. En unos momentos se redirigirá a la página de inicio de sesión."
+  );
 
-    const { token } = useParams();
-    const [message, setMessage] = useState('Confirmando tu cuenta...');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const dispatch = useDispatch();
-    const user = useSelector((state) => state.auth);
+  useEffect(() => {
+    const confirmUserAccount = async () => {
+      try {
+        const response = await confirmAccount(token);
+        setMessage(response.data.message);
+        dispatch(confirmAccountAction());
+      } catch (error) {
+        setMessage("Enlace de confirmación inválido o expirado.");
+      }
+    };
 
-    useEffect(() => {
-        const confirmUserAccount = async () => {
-          try {
-            const response = await confirmAccount(token);
-            setMessage(response.data.message);
-            dispatch(confirmAccountReducer());
-          } catch (error) {
-            setMessage('Enlace de confirmación inválido o expirado.');
-          }
-        };
-        confirmUserAccount();
-        console.log(user);
-      }, [token, dispatch]);
+    confirmUserAccount();
 
-    return(
-        <p>{message}</p>
-    )
+    // Redirigir a login después de 10 segundos
+    const timer = setTimeout(() => {
+      navigate("/login"); // Cambia '/login' si tu ruta de login es diferente
+    }, 10000);
+
+    return () => clearTimeout(timer); // Limpiar el temporizador al desmontar el componente
+  }, [token, dispatch, navigate]);
+
+  return <p>{message}</p>;
 }
 
-export default ConfirmAccount
+export default ConfirmAccount;

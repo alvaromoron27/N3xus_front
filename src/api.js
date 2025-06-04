@@ -1,7 +1,7 @@
 /* eslint-disable no-throw-literal */
 import axios from "axios";
 
-const baseURL = "http://192.168.0.12:3021/api";
+const baseURL = "http://localhost:3021/api";
 
 const axiosInstance = axios.create({
   baseURL,

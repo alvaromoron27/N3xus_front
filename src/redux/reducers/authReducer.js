@@ -21,7 +21,7 @@ const authSlice = createSlice({
       state.user = null;
       state.isConfirmedAccount = false;
     },
-    confirmAccountReducer: (state) => {
+    confirmAccountAction: (state) => {
       state.isConfirmedAccount = true;
     },
     register: (state) => {
@@ -66,7 +66,7 @@ export const {
   register,
   login,
   logout,
-  confirmAccountReducer,
+  confirmAccountAction,
   sendConfirmationEmail,
   decrementResendTimer,
   editUserField,
