@@ -6,21 +6,34 @@ import { useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { resetPassword } from "../../../api";
 import { useNavigate } from "react-router-dom";
+import { verifyResetToken } from "../../../api";
+
 
 function ResetPassword() {
   const [visibilityPasswd, setVisibilityPasswd] = useState(false);
-  const [isValidToken, setIsValidToken] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [succesfullMessage, setSuccesfullMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const { token } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Lógica de validación del token
-    if (token && token.length === 64) {
-      setIsValidToken(true);
+  const checkToken = async () => {
+    try {
+      await verifyResetToken(token);
+    } catch (error) {
+      const mensaje =
+        error?.response?.data?.message || "Token inválido o expirado.";
+      setErrorMessage(mensaje);
     }
-  }, [token, isValidToken]);
+  };
+
+  if (token) {
+    checkToken();
+  } else {
+    setErrorMessage("Token no proporcionado.");
+  }
+}, [token]);
 
   const formik = useFormik({
     initialValues: {
@@ -50,6 +63,10 @@ function ResetPassword() {
         }, 5000);
       } catch (error) {
         console.error("Error al cambiar la constraseña:", error);
+
+        // ✅ Extrae mensaje del backend si existe
+        const mensaje = error?.response?.data?.message || "Error desconocido";
+        setErrorMessage(mensaje);
       } finally {
         setSubmitting(false);
       }
@@ -65,13 +82,14 @@ function ResetPassword() {
       {succesfullMessage ? (
         <div className="reset-password-succesfullMessage">
           <p>
-            Su contraseña ha sido cambiada correctamente. En unos instantes se redirigirá a la página de login.
+            Su contraseña ha sido cambiada correctamente. En unos instantes se
+            redirigirá a la página de login.
           </p>
         </div>
       ) : (
         ""
       )}
-      {isValidToken ? (
+      {!errorMessage ? (
         <form
           className={`resetPassword_form ${
             succesfullMessage ? "formDisplayNone" : ""

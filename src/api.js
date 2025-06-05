@@ -91,6 +91,18 @@ export const resetPassword = async (token, newPassword) => {
   }
 };
 
+// Función para verificar si el token de recuperación es válido
+export const verifyResetToken = async (token) => {
+  try {
+    const response = await axiosInstance.get(`/verify-reset-token/${token}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error verificando el token de recuperación:", error);
+    throw error;
+  }
+};
+
+
 export const confirmAccount = async (token) => {
   try {
     const response = await axiosInstance.post("/confirm-account", { token });
