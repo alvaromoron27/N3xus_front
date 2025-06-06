@@ -5,8 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import ModalSavedBooks from "../../components/modals/modalSavedBooks/modalSavedBooks.jsx";
 import ModalUploadedBooks from "../../components/modals/modalUploadedBooks/modalUploadedBooks.jsx";
 import ModalDeleteAccount from "../../components/modals/modalDeleteAccount/modalDeleteAccount.jsx";
-import {editUserField} from "../../redux/reducers/authReducer.js"
+import { editUserField } from "../../redux/reducers/authReducer.js";
 import { editUsername, editName, editSurname, editEmail } from "../../api.js";
+import fotoPerfilDefault from "../../assets/foto_perfil_default.png";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -29,6 +30,7 @@ function Profile() {
   const [isEditingSurname, setIsEditingSurname] = useState(false);
   const [isEditingEmail, setIsEditingEmail] = useState(false);
 
+  const [tempAvatar, setTempAvatar] = useState(user.Avatar);
   const [tempUsername, setTempUsername] = useState(user.Usuario);
   const [tempName, setTempName] = useState(user.Nombre);
   const [tempSurname, setTempSurname] = useState(user.Apellidos);
@@ -49,7 +51,9 @@ function Profile() {
               setSuccessMsgUsername(result.data.res);
               setErrorMsgUsername("");
               setTimeout(() => setSuccessMsgUsername(""), 6000);
-              dispatch(editUserField({ field: "Usuario", value: result.data.Usuario }));
+              dispatch(
+                editUserField({ field: "Usuario", value: result.data.Usuario })
+              );
             } else {
               setErrorMsgUsername(result.data.res); // ← aquí se guarda el error
               setSuccessMsgUsername(""); //Mensaje de success vacio
@@ -83,7 +87,9 @@ function Profile() {
               setSuccessMsgName(result.data.res);
               setErrorMsgName("");
               setTimeout(() => setSuccessMsgName(""), 6000);
-              dispatch(editUserField({ field: "Nombre", value: result.data.Nombre }));
+              dispatch(
+                editUserField({ field: "Nombre", value: result.data.Nombre })
+              );
             } else {
               setErrorMsgName(result.data.res); // ← aquí se guarda el error
               setSuccessMsgName(""); //Mensaje de success vacio
@@ -118,7 +124,12 @@ function Profile() {
               setErrorMsgSurname("");
               setTimeout(() => setSuccessMsgSurname(""), 6000);
               // Aquí podrías actualizar el estado global/user si lo necesitas
-              dispatch(editUserField({ field: "Apellidos", value: result.data.Apellidos }));
+              dispatch(
+                editUserField({
+                  field: "Apellidos",
+                  value: result.data.Apellidos,
+                })
+              );
             } else {
               setErrorMsgSurname(result.data.res); // ← aquí se guarda el error
               setSuccessMsgSurname(""); //Mensaje de success vacio
@@ -153,7 +164,9 @@ function Profile() {
               setErrorMsgEmail("");
               setTimeout(() => setSuccessMsgEmail(""), 6000);
               // Aquí podrías actualizar el estado global/user si lo necesitas
-              dispatch(editUserField({ field: "Correo", value: result.data.Correo }));
+              dispatch(
+                editUserField({ field: "Correo", value: result.data.Correo })
+              );
             } else {
               setErrorMsgEmail(result.data.res); // ← aquí se guarda el error
               setSuccessMsgEmail(""); //Mensaje de success vacio
@@ -221,7 +234,16 @@ function Profile() {
   return (
     <div className="profile">
       <Header />
-      <h1>Perfil</h1>
+
+      <div className="profile_avatar">
+        <img
+          src={tempAvatar ? tempAvatar : fotoPerfilDefault}
+          className="profile_avatar_img"
+          alt="Avatar"
+        />
+        <button className="boton-editar"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24"><path fill="#ffffff" d="m7 17.013l4.413-.015l9.632-9.54c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.756-.756-2.075-.752-2.825-.003L7 12.583zM18.045 4.458l1.589 1.583l-1.597 1.582l-1.586-1.585zM9 13.417l6.03-5.973l1.586 1.586l-6.029 5.971L9 15.006z"/><path fill="#ffffff" d="M5 21h14c1.103 0 2-.897 2-2v-8.668l-2 2V19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2"/></svg></button>
+      </div>
+
       <div className="profileButtons">
         <button
           onClick={handleSavedEbookClick}

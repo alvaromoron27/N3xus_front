@@ -39,10 +39,12 @@ const ModalAddBook = ({
     }
   }, [bookData, userId]);
 
+  // Cambia handleChange para detectar input file
   const handleChange = (e) => {
+    const { id, value, files } = e.target;
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value,
+      [id]: files ? files[0] : value,
     });
   };
 
@@ -68,33 +70,42 @@ const ModalAddBook = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
- // Copia del formData para modificar la fecha sin mutar el estado
-    const dataToSend = {
-      ...formData,
-      publicacion_original: formatDateForMySQL(formData.publicacion_original),
-    };
+    // Creamos FormData para enviar archivo + demás campos
+    const data = new FormData();
+
+    data.append("portada", formData.portada);
+    data.append("titulo", formData.titulo);
+    data.append("descripcion", formData.descripcion);
+    data.append("autor", formData.autor);
+    data.append("categoria", formData.categoria);
+    data.append("numero_paginas", formData.numero_paginas);
+    data.append(
+      "publicacion_original",
+      formatDateForMySQL(formData.publicacion_original)
+    );
+    data.append("user_id", formData.user_id);
 
     if (field === "Editar") {
       try {
-        const response = await editBook(dataToSend, book_id);
+        const response = await editBook(data, book_id);
         const { message, updatedBook } = response;
         dispatch(editBookReducer(updatedBook));
         setSuccessMessage(message);
-        // Cierra el modal tras 2 segundos
-      setTimeout(() => {
-        onClose();
-      }, 2000);
+
+        setTimeout(() => {
+          onClose();
+        }, 2000);
       } catch (error) {
-        if (error.response.data.message) {
+        if (error.response?.data?.message) {
           setErrorMessage(error.response.data.message);
         }
       }
     } else {
       try {
-        await addBook(formData);
-        onClose(); // Cierra el modal después de guardar
+        await addBook(data);
+        onClose();
       } catch (error) {
-        if (error.response.data.message) {
+        if (error.response?.data?.message) {
           setErrorMessage(error.response.data.message);
         }
       }
@@ -111,11 +122,11 @@ const ModalAddBook = ({
               Portada
             </label>
             <input
-              type="text"
+              type="file"
               id="portada"
-              value={formData.portada}
+              accept="image/*"
               onChange={handleChange}
-              required
+              required={field !== "Editar"}
             />
           </div>
 

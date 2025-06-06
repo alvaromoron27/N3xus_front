@@ -166,9 +166,13 @@ export const editEmail = async (userId, tempEmail) => {
 };
 
 // Función para agregar un nuevo ebook
-export const addBook = async (bookData) => {
+export const addBook = async (formData) => {
   try {
-    const response = await axiosInstance.post("/addBook", bookData);
+    const response = await axiosInstance.post("/addBook", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error al agregar el ebook:", error);
@@ -176,16 +180,20 @@ export const addBook = async (bookData) => {
   }
 };
 
-// Función para editar un nuevo ebook
-export const editBook = async (bookData, book_id) => {
+export const editBook = async (formData, bookId) => {
   try {
-    const response = await axiosInstance.post(`/editBook/${book_id}`, bookData);
+    const response = await axiosInstance.post(`/editBook/${bookId}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error al editar el ebook:", error);
     throw error;
   }
 };
+
 
 // Función para obtener todos los ebooks
 export const getAllBooks = async () => {
@@ -272,6 +280,44 @@ export const deleteBook = async (bookId, userId) => {
     return response.data;
   } catch (error) {
     console.error("Error al eliminar el ebook:", error);
+    throw error;
+  }
+};
+
+export const uploadUserAvatar = async (userId, avatarFile) => {
+  try {
+    const formData = new FormData();
+    formData.append("userId", userId);
+    formData.append("avatar", avatarFile);
+
+    const response = await axiosInstance.post("/upload-avatar", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error al subir el avatar del usuario:", error);
+    throw error;
+  }
+};
+
+export const uploadBookCover = async (bookId, coverFile) => {
+  try {
+    const formData = new FormData();
+    formData.append("bookId", bookId);
+    formData.append("cover", coverFile);
+
+    const response = await axiosInstance.post("/upload-cover", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error al subir la portada del libro:", error);
     throw error;
   }
 };
