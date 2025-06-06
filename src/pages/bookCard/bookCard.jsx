@@ -26,9 +26,13 @@ function BookCard() {
   const [modalDeleteBookOpen, setModalDeleteBookOpen] = useState(false);
 
   useEffect(() => {
+    console.log(bookSelected)
     //Si el usuario logueado ha subido el libro establece uploadedByUser a true
     if (bookSelected.user_id === userId) {
       setUploadedByUser(true);
+      console.log(uploadedByUser);
+    }else{
+      console.log("Holaa")
     }
     // Actualiza el estado si el eBook seleccionado ya está guardado
     if (savedEbooks.some((book) => book?.id === bookSelected.id)) {
@@ -36,6 +40,8 @@ function BookCard() {
     } else {
       setPulsedSaveEbook(false);
     }
+    console.log(uploadedByUser);
+
   }, [bookSelected, savedEbooks, uploadedByUser, userId]);
 
   const handleSaveEbook = async () => {
