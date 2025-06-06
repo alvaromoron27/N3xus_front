@@ -1,7 +1,7 @@
 /* eslint-disable no-throw-literal */
 import axios from "axios";
 
-const baseURL = "http://localhost:3021/api";
+const baseURL = "https://n3xus.onrender.com/api";
 
 const axiosInstance = axios.create({
   baseURL,
@@ -112,6 +112,25 @@ export const confirmAccount = async (token) => {
     throw error;
   }
 };
+
+export const editAvatar = async (file, user_id) => {
+  const formData = new FormData();
+  formData.append("avatar", file);
+  formData.append("user_id", user_id);
+
+  try {
+    const response = await axiosInstance.post("/edit-avatar", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al subir el avatar:", error);
+    throw error;
+  }
+};
+
 
 export const editUsername = async (userId, tempUsername) => {
   try {

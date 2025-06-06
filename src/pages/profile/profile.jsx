@@ -1,17 +1,20 @@
 import "./styleProfile.css";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Header from "../../components/global/header/header.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import ModalSavedBooks from "../../components/modals/modalSavedBooks/modalSavedBooks.jsx";
 import ModalUploadedBooks from "../../components/modals/modalUploadedBooks/modalUploadedBooks.jsx";
 import ModalDeleteAccount from "../../components/modals/modalDeleteAccount/modalDeleteAccount.jsx";
 import { editUserField } from "../../redux/reducers/authReducer.js";
-import { editUsername, editName, editSurname, editEmail } from "../../api.js";
+import { editAvatar, editUsername, editName, editSurname, editEmail } from "../../api.js";
 import fotoPerfilDefault from "../../assets/foto_perfil_default.png";
 
 function Profile() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+
+  const [errorMsgAvatar, setErrorMsgAvatar] = useState("");
+  const [successMsgAvatar, setSuccessMsgAvatar] = useState("");
 
   const [errorMsgUsername, setErrorMsgUsername] = useState("");
   const [successMsgUsername, setSuccessMsgUsername] = useState("");
@@ -30,6 +33,7 @@ function Profile() {
   const [isEditingSurname, setIsEditingSurname] = useState(false);
   const [isEditingEmail, setIsEditingEmail] = useState(false);
 
+  const inputRef = useRef(null);
   const [tempAvatar, setTempAvatar] = useState(user.Avatar);
   const [tempUsername, setTempUsername] = useState(user.Usuario);
   const [tempName, setTempName] = useState(user.Nombre);
@@ -39,6 +43,39 @@ function Profile() {
   const [modalSavedEbookOpen, setModalSavedEbookOpen] = useState(false);
   const [modalUploadedEbookOpen, setModalUploadedEbookOpen] = useState(false);
   const [modalDeleteAccountOpen, setModalDeleteAccountOpen] = useState(false);
+
+  const handleClick = () => {
+    inputRef.current.click(); // Abre el explorador de archivos
+  };
+
+  const handleFileChange = async (e) => {
+  const archivo = e.target.files[0];
+
+  if (archivo && archivo.type.startsWith("image/")) {
+    try {
+      setTempAvatar(URL.createObjectURL(archivo)); // Preview local inmediata
+
+      const response = await editAvatar(archivo, user.Id); // O el ID que uses
+      setTempAvatar(response.avatar); // Actualiza con la URL real de Cloudinary
+
+      setSuccessMsgAvatar(response.message);
+      setErrorMsgAvatar("");
+      setTimeout(() => setSuccessMsgAvatar(""), 5000);
+      dispatch(
+                editUserField({ field: "Avatar", value: response.avatar })
+              );
+    } catch (err) {
+      setSuccessMsgAvatar("");
+      setErrorMsgAvatar("Error al subir avatar");
+      setTimeout(() => setErrorMsgAvatar(""), 5000);
+    }
+  } else {
+    setSuccessMsgAvatar("");
+    setErrorMsgAvatar("Archivo inválido");
+    setTimeout(() => setErrorMsgAvatar(""), 5000);
+  }
+};
+
 
   const handleEditUser = async (field) => {
     switch (field) {
@@ -50,14 +87,14 @@ function Profile() {
             if (result.status === 200) {
               setSuccessMsgUsername(result.data.res);
               setErrorMsgUsername("");
-              setTimeout(() => setSuccessMsgUsername(""), 6000);
+              setTimeout(() => setSuccessMsgUsername(""), 5000);
               dispatch(
                 editUserField({ field: "Usuario", value: result.data.Usuario })
               );
             } else {
               setErrorMsgUsername(result.data.res); // ← aquí se guarda el error
               setSuccessMsgUsername(""); //Mensaje de success vacio
-              setTimeout(() => setErrorMsgUsername(""), 6000);
+              setTimeout(() => setErrorMsgUsername(""), 5000);
               setTempUsername(user.Usuario);
             }
           } catch (error) {
@@ -65,11 +102,11 @@ function Profile() {
               // El backend respondió con error, pero no es un fallo de red
               setErrorMsgUsername(error.response.data); // ← Aquí viene el mensaje del backend
               setTempUsername(user.Usuario);
-              setTimeout(() => setErrorMsgUsername(""), 6000);
+              setTimeout(() => setErrorMsgUsername(""), 5000);
             } else {
               setErrorMsgUsername("Error de red o del servidor.");
               setTempUsername(user.Usuario);
-              setTimeout(() => setErrorMsgUsername(""), 6000);
+              setTimeout(() => setErrorMsgUsername(""), 5000);
             }
             setSuccessMsgUsername("");
           }
@@ -86,14 +123,14 @@ function Profile() {
             if (result.status === 200) {
               setSuccessMsgName(result.data.res);
               setErrorMsgName("");
-              setTimeout(() => setSuccessMsgName(""), 6000);
+              setTimeout(() => setSuccessMsgName(""), 5000);
               dispatch(
                 editUserField({ field: "Nombre", value: result.data.Nombre })
               );
             } else {
               setErrorMsgName(result.data.res); // ← aquí se guarda el error
               setSuccessMsgName(""); //Mensaje de success vacio
-              setTimeout(() => setErrorMsgName(""), 6000);
+              setTimeout(() => setErrorMsgName(""), 5000);
               setTempName(user.Nombre);
             }
           } catch (error) {
@@ -101,11 +138,11 @@ function Profile() {
               // El backend respondió con error, pero no es un fallo de red
               setErrorMsgName(error.response.data); // ← Aquí viene el mensaje del backend
               setTempName(user.Nombre);
-              setTimeout(() => setErrorMsgName(""), 6000);
+              setTimeout(() => setErrorMsgName(""), 5000);
             } else {
               setErrorMsgName("Error de red o del servidor.");
               setTempName(user.Nombre);
-              setTimeout(() => setErrorMsgName(""), 6000);
+              setTimeout(() => setErrorMsgName(""), 5000);
             }
             setSuccessMsgName("");
           }
@@ -122,7 +159,7 @@ function Profile() {
             if (result.status === 200) {
               setSuccessMsgSurname(result.data.res);
               setErrorMsgSurname("");
-              setTimeout(() => setSuccessMsgSurname(""), 6000);
+              setTimeout(() => setSuccessMsgSurname(""), 5000);
               // Aquí podrías actualizar el estado global/user si lo necesitas
               dispatch(
                 editUserField({
@@ -133,7 +170,7 @@ function Profile() {
             } else {
               setErrorMsgSurname(result.data.res); // ← aquí se guarda el error
               setSuccessMsgSurname(""); //Mensaje de success vacio
-              setTimeout(() => setErrorMsgSurname(""), 6000);
+              setTimeout(() => setErrorMsgSurname(""), 5000);
               setTempSurname(user.Apellidos);
             }
           } catch (error) {
@@ -141,11 +178,11 @@ function Profile() {
               // El backend respondió con error, pero no es un fallo de red
               setErrorMsgSurname(error.response.data); // ← Aquí viene el mensaje del backend
               setTempSurname(user.Apellidos);
-              setTimeout(() => setErrorMsgSurname(""), 6000);
+              setTimeout(() => setErrorMsgSurname(""), 5000);
             } else {
               setErrorMsgSurname("Error de red o del servidor.");
               setTempSurname(user.Apellidos);
-              setTimeout(() => setErrorMsgSurname(""), 6000);
+              setTimeout(() => setErrorMsgSurname(""), 5000);
             }
             setSuccessMsgSurname("");
           }
@@ -162,7 +199,7 @@ function Profile() {
             if (result.status === 200) {
               setSuccessMsgEmail(result.data.res);
               setErrorMsgEmail("");
-              setTimeout(() => setSuccessMsgEmail(""), 6000);
+              setTimeout(() => setSuccessMsgEmail(""), 5000);
               // Aquí podrías actualizar el estado global/user si lo necesitas
               dispatch(
                 editUserField({ field: "Correo", value: result.data.Correo })
@@ -170,7 +207,7 @@ function Profile() {
             } else {
               setErrorMsgEmail(result.data.res); // ← aquí se guarda el error
               setSuccessMsgEmail(""); //Mensaje de success vacio
-              setTimeout(() => setErrorMsgEmail(""), 6000);
+              setTimeout(() => setErrorMsgEmail(""), 5000);
               setTempEmail(user.Correo);
             }
           } catch (error) {
@@ -178,11 +215,11 @@ function Profile() {
               // El backend respondió con error, pero no es un fallo de red
               setErrorMsgEmail(error.response.data); // ← Aquí viene el mensaje del backend
               setTempEmail(user.Correo);
-              setTimeout(() => setErrorMsgEmail(""), 6000);
+              setTimeout(() => setErrorMsgEmail(""), 5000);
             } else {
               setErrorMsgEmail("Error de red o del servidor.");
               setTempEmail(user.Correo);
-              setTimeout(() => setErrorMsgEmail(""), 6000);
+              setTimeout(() => setErrorMsgEmail(""), 5000);
             }
             setSuccessMsgEmail("");
           }
@@ -241,9 +278,41 @@ function Profile() {
           className="profile_avatar_img"
           alt="Avatar"
         />
-        <button className="boton-editar"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24"><path fill="#ffffff" d="m7 17.013l4.413-.015l9.632-9.54c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.756-.756-2.075-.752-2.825-.003L7 12.583zM18.045 4.458l1.589 1.583l-1.597 1.582l-1.586-1.585zM9 13.417l6.03-5.973l1.586 1.586l-6.029 5.971L9 15.006z"/><path fill="#ffffff" d="M5 21h14c1.103 0 2-.897 2-2v-8.668l-2 2V19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2"/></svg></button>
+        <input
+          type="file"
+          accept="image/*"
+          ref={inputRef}
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+        />
+        <button className="boton-editar" onClick={handleClick}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="21"
+            height="21"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="#ffffff"
+              d="m7 17.013l4.413-.015l9.632-9.54c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.756-.756-2.075-.752-2.825-.003L7 12.583zM18.045 4.458l1.589 1.583l-1.597 1.582l-1.586-1.585zM9 13.417l6.03-5.973l1.586 1.586l-6.029 5.971L9 15.006z"
+            />
+            <path
+              fill="#ffffff"
+              d="M5 21h14c1.103 0 2-.897 2-2v-8.668l-2 2V19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2"
+            />
+          </svg>
+        </button>
       </div>
-
+      {errorMsgAvatar && (
+        <div className="error-message-profile">
+          <p style={{ color: "red", margin: "7px" }}>{errorMsgAvatar}</p>
+        </div>
+      )}
+      {successMsgAvatar && (
+        <div className="success-message-profile">
+          <p style={{ color: "green", margin: "7px" }}>{successMsgAvatar}</p>
+        </div>
+      )}
       <div className="profileButtons">
         <button
           onClick={handleSavedEbookClick}

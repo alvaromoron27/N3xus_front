@@ -25,6 +25,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 50%;
 }
 
 .boton-editar {
@@ -52,7 +53,7 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
-  padding-bottom: 35px;
+  padding: 20px;
 }
 
 .profile-buttonSavedBooks {
