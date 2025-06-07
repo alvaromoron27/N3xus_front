@@ -207,6 +207,7 @@
   }
 
   .input-wrapper {
+    display: flex;
     position: static; /* 🧠 Elimina el posicionamiento absoluto */
     transform: none;  /* 🧠 Evita desplazamiento */
     margin-top: 10px;
@@ -218,14 +219,13 @@
     position: static; /* ❗️ También quitar absolute aquí */
     transform: none;
     margin: 0 auto; /* Centra en el eje X */
-    width: 90vw;
-    max-width: 300px;
+    width: 210px;
   }
 
   .input-icon {
-    position: aboslute; /* Puedes dejarlo si es un icono dentro del input */
-    right: 110px;
-    top: 78%;
+    position: relative;
+    right: 61px;
+    top: 50%;
     transform: translateY(-50%);
   }
 }
