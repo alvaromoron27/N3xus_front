@@ -6,7 +6,13 @@ import ModalSavedBooks from "../../components/modals/modalSavedBooks/modalSavedB
 import ModalUploadedBooks from "../../components/modals/modalUploadedBooks/modalUploadedBooks.jsx";
 import ModalDeleteAccount from "../../components/modals/modalDeleteAccount/modalDeleteAccount.jsx";
 import { editUserField } from "../../redux/reducers/authReducer.js";
-import { editAvatar, editUsername, editName, editSurname, editEmail } from "../../api.js";
+import {
+  editAvatar,
+  editUsername,
+  editName,
+  editSurname,
+  editEmail,
+} from "../../api.js";
 import fotoPerfilDefault from "../../assets/foto_perfil_default.png";
 
 function Profile() {
@@ -49,38 +55,39 @@ function Profile() {
   };
 
   const handleFileChange = async (e) => {
-  const archivo = e.target.files[0];
+    const archivo = e.target.files[0];
 
-  if (archivo && archivo.type.startsWith("image/")) {
-    try {
-      setTempAvatar(URL.createObjectURL(archivo)); // Preview local inmediata
+    if (archivo && archivo.type.startsWith("image/")) {
+      try {
+        setTempAvatar(URL.createObjectURL(archivo)); // Preview local inmediata
 
-      const response = await editAvatar(archivo, user.Id); // O el ID que uses
-      setTempAvatar(response.avatar); // Actualiza con la URL real de Cloudinary
+        const response = await editAvatar(archivo, user.Id); // O el ID que uses
+        setTempAvatar(response.avatar); // Actualiza con la URL real de Cloudinary
 
-      setSuccessMsgAvatar(response.message);
-      setErrorMsgAvatar("");
-      setTimeout(() => setSuccessMsgAvatar(""), 5000);
-      dispatch(
-                editUserField({ field: "Avatar", value: response.avatar })
-              );
-    } catch (err) {
+        setSuccessMsgAvatar(response.message);
+        setErrorMsgAvatar("");
+        setTimeout(() => setSuccessMsgAvatar(""), 5000);
+        dispatch(editUserField({ field: "Avatar", value: response.avatar }));
+      } catch (err) {
+        setSuccessMsgAvatar("");
+        setErrorMsgAvatar("Error al subir avatar");
+        setTimeout(() => setErrorMsgAvatar(""), 5000);
+      }
+    } else {
       setSuccessMsgAvatar("");
-      setErrorMsgAvatar("Error al subir avatar");
+      setErrorMsgAvatar("Archivo inválido");
       setTimeout(() => setErrorMsgAvatar(""), 5000);
     }
-  } else {
-    setSuccessMsgAvatar("");
-    setErrorMsgAvatar("Archivo inválido");
-    setTimeout(() => setErrorMsgAvatar(""), 5000);
-  }
-};
-
+  };
 
   const handleEditUser = async (field) => {
     switch (field) {
       case "username":
         if (isEditingUsername) {
+          if (tempUsername === user.Usuario) {
+            setIsEditingUsername(false);
+            return;
+          }
           try {
             const result = await editUsername(user.Id, tempUsername); // leer el texto devuelto por el servidor
 
@@ -117,6 +124,10 @@ function Profile() {
         break;
       case "name":
         if (isEditingName) {
+          if (tempName === user.Nombre) {
+            setIsEditingName(false);
+            return;
+          }
           try {
             const result = await editName(user.Id, tempName); // leer el texto devuelto por el servidor
 
@@ -153,6 +164,10 @@ function Profile() {
         break;
       case "surname":
         if (isEditingSurname) {
+          if (tempSurname === user.Apellidos) {
+            setIsEditingSurname(false);
+            return;
+          }
           try {
             const result = await editSurname(user.Id, tempSurname); // leer el texto devuelto por el servidor
 
@@ -193,6 +208,10 @@ function Profile() {
         break;
       case "email":
         if (isEditingEmail) {
+          if (tempEmail === user.Correo) {
+            setIsEditingEmail(false);
+            return;
+          }
           try {
             const result = await editEmail(user.Id, tempEmail); // leer el texto devuelto por el servidor
 
