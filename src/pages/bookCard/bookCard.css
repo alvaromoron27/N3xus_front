@@ -24,11 +24,14 @@
 
   .ebookCard-data-title{
     text-align: center;
+    margin-top: 0px;
+    margin-bottom: 40px;
   }
 
   .ebookCard-portAndButtons{
     display: flex;
     flex-direction: column;
+    margin-bottom: 20px;
   }
 
   .ebookCard-portAndButtons button{
@@ -62,7 +65,7 @@
   }
 
   .ebookCard-data{
-    margin-top: 20px;
+    margin-top: 0px;
     margin-left: 20px;
   }
   
