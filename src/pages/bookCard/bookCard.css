@@ -7,14 +7,23 @@
 
 .ebookCard {
     display: flex;
+    flex-direction: column;
     width: 80%;
-    padding: 20px; /* Espacio interno para respirar */
-    border-radius: 8px; /* Bordes redondeados */
-    background-color: #ffffff; /* Fondo blanco */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave para profundidad */
-    margin: 20px auto; /* Centramos la card horizontalmente */
-    transition: transform 0.3s, box-shadow 0.3s; /* Animación para interactividad */
-    font-family: Arial, sans-serif; /* Fuente limpia */
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    margin: 20px auto; 
+    transition: transform 0.3s, box-shadow 0.3s; 
+    font-family: 'regular';
+  }
+
+  .ebookCard-esquema{
+    display: flex;
+  }
+
+  .ebookCard-data-title{
+    text-align: center;
   }
 
   .ebookCard-portAndButtons{
@@ -49,44 +58,26 @@
   .ebookCard-right{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     width: 100%;
   }
 
   .ebookCard-data{
     margin-top: 20px;
     margin-left: 20px;
-    word-break: break-all;
   }
   
   .ebookCard p {
     margin: 8px 0; /* Espacio entre párrafos */
-    color: #333; /* Color del texto más oscuro */
+    color: #161616; /* Color del texto más oscuro */
     line-height: 1.5; /* Altura de línea para mejor legibilidad */
-    font-style: italic;
+    font-style: normal;
   }
-  
-  .ebookCard p:nth-of-type(1) {
-    font-weight: bold; /* Hace el título más prominente */
-    font-size: 18px; /* Tamaño de fuente más grande para el título */
-    color: #0c0c0c; /* Color de texto diferente para el título */
-    margin-bottom: 10px; /* Más espacio debajo del título */
-  }
-  
-  .ebookCard p:nth-of-type(2) {
-    font-size: 14px; /* Tamaño de fuente más pequeño para la descripción */
-    color: #555; /* Color de texto más tenue */
-    margin-bottom: 15px; /* Espacio adicional debajo de la descripción */
-  }
-  
-  .ebookCard p:last-of-type {
-    margin-bottom: 0;
-  }
+
 
   .ebookCard-editAndDelete{
     display: flex;
     flex-direction: row;
-    justify-content: end;
+    justify-content: center;
     align-items: end;
     gap: 10px;
   }
@@ -98,14 +89,14 @@
     justify-content: center;
     background-color: rgb(15, 54, 138);
     border-radius: 10px;
+    border: 1px solid black;
     transition: all 0.2s ease-in-out;
-    font-weight: bold;
+    font-weight: normal;
     font-family: 'regular';
     font-size: 15px;
     padding: 15px;
     padding-left: 5px;
     padding-right: 5px;
-    border: px solid rgb(41, 41, 41);
     color: #ffffff;
     gap: 18px;
   }
@@ -125,13 +116,13 @@
     background-color: rgb(255, 0, 0);
     border-radius: 10px;
     transition: all 0.2s ease-in-out;
-    font-weight: bold;
+    font-weight: normal;
     font-family: 'regular';
     font-size: 15px;
     padding: 15px;
     padding-left: 5px;
     padding-right: 5px;
-    border: px solid rgb(41, 41, 41);
+    border: 1px solid black;
     color: #ffffff;
     gap: 18px;
   }
@@ -139,3 +130,13 @@
   .button-deleteBook:hover{
     box-shadow: 1px 1px 10px rgb(247, 59, 59);
   }
+
+  /* Móviles */
+@media (max-width: 680px) {
+    .ebookCard-esquema {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}

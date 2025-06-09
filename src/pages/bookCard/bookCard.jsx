@@ -77,7 +77,9 @@ function BookCard() {
     <div className="container-EbookCard">
       <Header />
       <div className="ebookCard">
-        <div className="ebookCard-portAndButtons">
+        <h3 className="ebookCard-data-title">{bookSelected.titulo}</h3>
+        <div className="ebookCard-esquema">
+          <div className="ebookCard-portAndButtons">
           <img
             src={bookSelected.portada}
             alt=""
@@ -131,7 +133,6 @@ function BookCard() {
         </div>
         <div className="ebookCard-right">
           <div className="ebookCard-data">
-            <p>{bookSelected.titulo}</p>
             <p>{bookSelected.descripcion}</p>
             <p>
               <svg
@@ -145,9 +146,9 @@ function BookCard() {
                   d="M496.938 14.063c-95.14 3.496-172.297 24.08-231.282 55.812l-29.47 49.28l-4.967-28.093c-10.535 7.402-20.314 15.222-29.314 23.407l-14.687 45.06l-5.032-25.155c-40.65 45.507-60.41 99.864-58.938 155.906c47.273-93.667 132.404-172.727 211.97-221.155l9.717 15.97c-75.312 45.838-156.387 121.202-202.187 208.25h12.156c19.78-12.02 39.16-26.858 58.406-43.44l-30.28 1.595l54.218-23.094c46.875-43.637 93.465-94.974 143.313-138.28l-24.47-5.19l56.5-21.03c26.853-20.485 54.8-37.844 84.344-49.843zM59.53 312.03v30.408H194V312.03zm20.376 49.095L47.25 389.813L24.97 474.78l14.53 15.876h177.22l14.56-15.875L209 389.814l-30.906-28.688H79.906z"
                 />
               </svg>
-              {bookSelected.autor}
+              <strong>{bookSelected.autor}</strong>
             </p>
-            <p>Nº páginas: {bookSelected.numero_paginas}</p>
+            <p>Nº páginas: <strong>{bookSelected.numero_paginas}</strong></p>
             <p
               className={`ebook-category ${
                 bookSelected.categoria ? bookSelected.categoria : ""
@@ -155,12 +156,11 @@ function BookCard() {
             >
               {bookSelected.categoria}
             </p>
-            <p>Isbn: {bookSelected.isbn ? bookSelected.isbn : "No tiene"}</p>
             <p>
               Publicación original:{" "}
-              {formatDate(bookSelected.publicacion_original)}
+              <strong>{formatDate(bookSelected.publicacion_original)}</strong>
             </p>
-            <p>Última modificación: {formatDate(bookSelected.created_at)}</p>
+            <p>Última modificación: <strong>{formatDate(bookSelected.created_at)}</strong></p>
           </div>
           {uploadedByUser && (
             <div className="ebookCard-editAndDelete">
@@ -305,6 +305,7 @@ function BookCard() {
             onClose={handleDeleteBookClick}
           />
         )}
+        </div>
       </div>
     </div>
   );

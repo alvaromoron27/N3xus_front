@@ -85,7 +85,7 @@
     border: none;
     transition: all 0.2s ease-in-out;
     font-family: 'regular';
-    font-size: 17px;
+    font-size: 19px;
     box-shadow: 1px 2px 3px rgb(0, 0, 0);
     padding: 15px;
 }
@@ -255,5 +255,6 @@
 
     .home-options {
     justify-content: center;
+    width: 95vw;
 }
 }
