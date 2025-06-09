@@ -62,10 +62,14 @@
 
 .home-options {
     width: 90vw;
+    height: auto;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: space-between;
     max-width: 1300px;
+    gap: 20px;
 }
 
 .home-options .home-option-addEbook {
@@ -74,7 +78,7 @@
     justify-content: space-between;
     height: 38px;
     min-width: 170px;
-    margin: 40px;
+    margin: 0px;
     background-color: rgb(25, 25, 143);
     color: white;
     border-radius: 8px;
@@ -93,14 +97,14 @@
 .filter-ebooks {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
-    width: 100vw;
-    height: 34px;
-    padding: 20px;
+    height: auto;
+    gap: 20px;
 }
 
 .filter-ebooks-tag {
-    margin-left: 50px;
+    margin-left: 0px;
     background-color: rgb(192, 214, 243);
     padding: 12px;
     border-radius: 10px;
@@ -109,7 +113,7 @@
 
 /* Estilo del botón principal */
 .dropdown-button {
-    margin-left: 50px;
+    margin-left: 0px;
     background-color: rgb(192, 214, 243);
     padding: 10px;
     border-radius: 10px;
@@ -236,15 +240,20 @@
         top: 50%;
         transform: translateY(-50%);
     }
-    .add_book{
+
+    .add_book {
         display: none;
     }
 
     .home-options .home-option-addEbook {
+        justify-content: center;
+        width: auto;
+        padding: 5px;
+        padding-left: 8px;
+        min-width: auto;
+    }
+
+    .home-options {
     justify-content: center;
-    width: auto;
-    padding: 5px;
-    padding-left: 8px;
-    min-width: auto;
 }
 }
