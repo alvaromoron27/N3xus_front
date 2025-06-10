@@ -146,7 +146,7 @@ function ResetPassword() {
               </button>
             </div>
             {formik.touched.contraseña && formik.errors.contraseña && (
-              <p className="error-message">{formik.errors.contraseña}</p>
+              <p className="resetPassword-error-message">{formik.errors.contraseña}</p>
             )}
           </div>
           <div>
@@ -200,7 +200,7 @@ function ResetPassword() {
             </div>
             {formik.touched.confirmarContraseña &&
               formik.errors.confirmarContraseña && (
-                <p className="error-message">
+                <p className="resetPassword-error-message">
                   {formik.errors.confirmarContraseña}
                 </p>
               )}

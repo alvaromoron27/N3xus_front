@@ -102,7 +102,7 @@ const Register = () => {
             />
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256"><path fill="currentColor" d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56" /></svg>
           </div>
-          {formik.touched.usuario && formik.errors.usuario && <p className="error-message">{formik.errors.usuario}</p>}
+          {formik.touched.usuario && formik.errors.usuario && <p className="register-error-message">{formik.errors.usuario}</p>}
         </div>
         <div>
           <div className="register_form_inputs">
@@ -116,7 +116,7 @@ const Register = () => {
             />
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256"><path fill="currentColor" d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56" /></svg>
           </div>
-          {formik.touched.nombre && formik.errors.nombre && <p className="error-message">{formik.errors.nombre}</p>}
+          {formik.touched.nombre && formik.errors.nombre && <p className="register-error-message">{formik.errors.nombre}</p>}
         </div>
         <div>
           <div className="register_form_inputs">
@@ -130,7 +130,7 @@ const Register = () => {
             />
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256"><path fill="currentColor" d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56" /></svg>
           </div>
-          {formik.touched.apellidos && formik.errors.apellidos && <p className="error-message">{formik.errors.apellidos}</p>}
+          {formik.touched.apellidos && formik.errors.apellidos && <p className="register-error-message">{formik.errors.apellidos}</p>}
         </div>
         <div>
           <div className="register_form_inputs">
@@ -144,7 +144,7 @@ const Register = () => {
             />
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M28 6H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2m-2.2 2L16 14.78L6.2 8ZM4 24V8.91l11.43 7.91a1 1 0 0 0 1.14 0L28 8.91V24Z" /></svg>
           </div>
-          {formik.touched.correo && formik.errors.correo && <p className="error-message">{formik.errors.correo}</p>}
+          {formik.touched.correo && formik.errors.correo && <p className="register-error-message">{formik.errors.correo}</p>}
         </div>
         <div>
           <div className="register_form_inputs">
@@ -172,7 +172,7 @@ const Register = () => {
               )}
             </button>
           </div>
-          {formik.touched.contraseña && formik.errors.contraseña && <p className="error-message">{formik.errors.contraseña}</p>}
+          {formik.touched.contraseña && formik.errors.contraseña && <p className="register-error-message">{formik.errors.contraseña}</p>}
         </div>
         <div>
           <div className="register_form_inputs">
@@ -200,13 +200,13 @@ const Register = () => {
               )}
             </button>
           </div>
-          {formik.touched.confirmarContraseña && formik.errors.confirmarContraseña && <p className="error-message">{formik.errors.confirmarContraseña}</p>}
+          {formik.touched.confirmarContraseña && formik.errors.confirmarContraseña && <p className="register-error-message">{formik.errors.confirmarContraseña}</p>}
         </div>
         <div>
           <input className='buttonAuth' type='submit' value='Registrarme' />
         </div>
       </form>
-      {formik.errors.general && <p className="error-message">{formik.errors.general}</p>}
+      {formik.errors.general && <p className="register-error-message">{formik.errors.general}</p>}
       <p className='linkLogin'>Si ya tienes cuenta <a href="#" onClick={handleLoginClick}>Inicia sesión</a></p>
     </div>
   );

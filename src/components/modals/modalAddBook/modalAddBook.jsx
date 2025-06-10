@@ -96,9 +96,9 @@ const ModalAddBook = ({
           onClose();
         }, 2000);
       } catch (error) {
-        if (error.response?.data?.message) {
-          setErrorMessage(error.response.data.message);
-        }
+          setErrorMessage(
+            error.message === "Network Error" ? "Error de red" : ""
+          );
       }
     } else {
       try {
@@ -118,13 +118,14 @@ const ModalAddBook = ({
         <h2>{titulo}</h2>
         <form className="modal-content-addEbook-form" onSubmit={handleSubmit}>
           <div className="modal-content-addEbook-form-group">
-            <label className="required-label" htmlFor="portada">
+            <label className={field !== "Editar" ? "required-label" : ""} htmlFor="portada">
               Portada
             </label>
             <input
               type="file"
               id="portada"
               accept="image/*"
+              className="modal-content-addEbook-form-group-button-selectImage"
               onChange={handleChange}
               required={field !== "Editar"}
             />
@@ -222,10 +223,10 @@ const ModalAddBook = ({
             </select>
           </div>
 
-          {errorMessage && <div className="error-message">{errorMessage}</div>}
           {successMessage && (
-            <div className="success-message">{successMessage}</div>
+            <div className="addBook-message success-message">{successMessage}</div>
           )}
+          {errorMessage && <div className="addBook-message error-message">{errorMessage}</div>}
 
           <div className="modal-content-addEbook-save">
             <button type="submit" className="modal-content-addEbook-buttonSave">

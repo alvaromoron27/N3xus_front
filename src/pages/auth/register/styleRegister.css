@@ -117,7 +117,7 @@ html {
     color: rgb(0, 0, 0)
 }
 
-.error-message {
+.register-error-message {
     font-family: 'italica';
     color: rgb(245, 17, 1);
     margin: 0px;

@@ -282,7 +282,7 @@ function Login() {
                 </svg>
               </div>
               {formik.touched.identificador && formik.errors.identificador && (
-                <p className="error-message">{formik.errors.identificador}</p>
+                <p className="login-error-message">{formik.errors.identificador}</p>
               )}
             </div>
             <div>
@@ -335,7 +335,7 @@ function Login() {
                 </button>
               </div>
               {formik.touched.contraseña && formik.errors.contraseña && (
-                <p className="error-message">{formik.errors.contraseña}</p>
+                <p className="login-error-message">{formik.errors.contraseña}</p>
               )}
               <p className="forgotPassword" onClick={handleRecoveryClick}>
                 He olvidado mi contraseña
@@ -351,9 +351,9 @@ function Login() {
             </div>
           </form>
           {formik.errors.general && (
-            <p className="error-message">{formik.errors.general}</p>
+            <p className="login-error-message">{formik.errors.general}</p>
           )}
-          {error && <p className="error-message">{error}</p>}
+          {error && <p className="login-error-message">{error}</p>}
           <p className="linkRegister">
             Si aun no tienes cuenta{" "}
             <a href="#" onClick={handleRegisterClick}>

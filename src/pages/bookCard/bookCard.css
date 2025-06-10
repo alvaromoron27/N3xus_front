@@ -1,142 +1,150 @@
-.ebook-card-data-front-ebook{
-    width: 300px;
-    height: 440px;
-    border-radius: 3px;
-    object-fit: cover;
+.ebook-card-data-front-ebook {
+  width: 300px;
+  height: 440px;
+  border-radius: 3px;
+  object-fit: cover;
 }
 
 .ebookCard {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #ffffff; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    margin: 20px auto; 
-    transition: transform 0.3s, box-shadow 0.3s; 
-    font-family: 'regular';
-  }
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  transition: transform 0.3s, box-shadow 0.3s;
+  font-family: 'regular';
+}
 
-  .ebookCard-esquema{
-    display: flex;
-  }
+.ebookCard-esquema {
+  display: flex;
+}
 
-  .ebookCard-data-title{
-    text-align: center;
-    margin-top: 0px;
-    margin-bottom: 40px;
-  }
+.ebookCard-data-title {
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 40px;
+}
 
-  .ebookCard-portAndButtons{
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-  }
+.ebookCard-portAndButtons {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
 
-  .ebookCard-portAndButtons button{
-    margin-top: 20px;
-  }
+.ebookCard-portAndButtons button {
+  margin-top: 20px;
+}
 
-  .ebookCard-saveEbook{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgb(15, 15, 15);
-    color: white;
-    border-radius: 10px;
-    border: none;
-    height: 35px;
-    transition: all 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
-    font-family: 'regular';
-    font-size: 16px;
-    gap: 7px;
-  }
+.ebookCard-saveEbook {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(15, 15, 15);
+  color: white;
+  border-radius: 10px;
+  border: none;
+  height: 35px;
+  transition: all 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
+  font-family: 'regular';
+  font-size: 16px;
+  gap: 7px;
+}
 
-  .ebookCard-saveEbook:hover{
-    box-shadow: 0 0 12px rgb(34, 34, 34);
-    transition: all 0.2s step-start;
-  }
+.ebookCard-saveEbook:hover {
+  box-shadow: 0 0 12px rgb(34, 34, 34);
+  transition: all 0.2s step-start;
+}
 
-  .ebookCard-right{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
+.ebookCard-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
 
-  .ebookCard-data{
-    margin-top: 0px;
-    margin-left: 20px;
-  }
-  
-  .ebookCard p {
-    margin: 8px 0; /* Espacio entre párrafos */
-    color: #161616; /* Color del texto más oscuro */
-    line-height: 1.5; /* Altura de línea para mejor legibilidad */
-    font-style: normal;
-  }
+.ebookCard-data {
+  margin-top: 0px;
+  margin-left: 20px;
+}
+
+.ebookCard p {
+  margin: 8px 0;
+  /* Espacio entre párrafos */
+  color: #161616;
+  /* Color del texto más oscuro */
+  line-height: 1.5;
+  /* Altura de línea para mejor legibilidad */
+  font-style: normal;
+}
 
 
-  .ebookCard-editAndDelete{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: end;
-    gap: 10px;
-  }
+.ebookCard-editAndDelete {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: end;
+  gap: 10px;
+}
 
-  .button-editBook{
-        display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    background-color: rgb(15, 54, 138);
-    border-radius: 10px;
-    border: 1px solid black;
-    transition: all 0.2s ease-in-out;
-    font-weight: normal;
-    font-family: 'regular';
-    font-size: 15px;
-    padding: 15px;
-    padding-left: 5px;
-    padding-right: 5px;
-    color: #ffffff;
-    gap: 18px;
-  }
+.button-editBook {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(15, 54, 138);
+  border-radius: 10px;
+  border: 1px solid black;
+  transition: all 0.2s ease-in-out;
+  font-weight: normal;
+  font-family: 'regular';
+  font-size: 15px;
+  padding: 15px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #ffffff;
+  gap: 18px;
+}
 
-  .ebookCard-deleteBook{
-    display: flex;
-    justify-content: end;
-    height: 30px;
-    margin-top: 20px;
-  }
-  
-  .button-deleteBook{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    background-color: rgb(255, 0, 0);
-    border-radius: 10px;
-    transition: all 0.2s ease-in-out;
-    font-weight: normal;
-    font-family: 'regular';
-    font-size: 15px;
-    padding: 15px;
-    padding-left: 5px;
-    padding-right: 5px;
-    border: 1px solid black;
-    color: #ffffff;
-    gap: 18px;
-  }
+.button-editBook:hover {
+  box-shadow: 1px 1px 10px rgb(26, 76, 214);
+}
 
-  .button-deleteBook:hover{
-    box-shadow: 1px 1px 10px rgb(247, 59, 59);
-  }
+.ebookCard-deleteBook {
+  display: flex;
+  justify-content: end;
+  height: 30px;
+  margin-top: 20px;
+}
 
-  /* Móviles */
+.button-deleteBook {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 0, 0);
+  border-radius: 10px;
+  transition: all 0.2s ease-in-out;
+  font-weight: normal;
+  font-family: 'regular';
+  font-size: 15px;
+  padding: 15px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 1px solid black;
+  color: #ffffff;
+  gap: 10px;
+}
+
+.button-deleteBook:hover {
+  box-shadow: 1px 1px 10px rgb(247, 59, 59);
+}
+
+/* Móviles */
 @media (max-width: 680px) {
-    .ebookCard-esquema {
+  .ebookCard-esquema {
     display: flex;
     flex-direction: column;
     align-items: center;

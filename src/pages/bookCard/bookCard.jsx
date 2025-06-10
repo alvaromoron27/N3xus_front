@@ -169,59 +169,7 @@ function BookCard() {
                   className="button-editBook"
                   onClick={handleEditBookClick}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="25"
-                    height="25"
-                    viewBox="0 0 24 24"
-                  >
-                    <g
-                      fill="rgb(15, 54, 138)"
-                      stroke="white"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1"
-                    >
-                      <path
-                        strokeDasharray="20"
-                        strokeDashoffset="20"
-                        d="M3 21h18"
-                      >
-                        <animate
-                          fill="freeze"
-                          attributeName="stroke-dashoffset"
-                          dur="0.2s"
-                          values="20;0"
-                        />
-                      </path>
-                      <path
-                        strokeDasharray="48"
-                        strokeDashoffset="48"
-                        d="M7 17v-4l10 -10l4 4l-10 10h-4"
-                      >
-                        <animate
-                          fill="freeze"
-                          attributeName="stroke-dashoffset"
-                          begin="0.2s"
-                          dur="0.6s"
-                          values="48;0"
-                        />
-                      </path>
-                      <path
-                        strokeDasharray="8"
-                        strokeDashoffset="8"
-                        d="M14 6l4 4"
-                      >
-                        <animate
-                          fill="freeze"
-                          attributeName="stroke-dashoffset"
-                          begin="0.8s"
-                          dur="0.2s"
-                          values="8;0"
-                        />
-                      </path>
-                    </g>
-                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 16l-1 4l4-1L19.586 7.414a2 2 0 0 0 0-2.828l-.172-.172a2 2 0 0 0-2.828 0zM15 6l3 3m-5 11h8"/></svg>
                   Editar libro
                 </button>
               </div>
@@ -230,59 +178,7 @@ function BookCard() {
                   className="button-deleteBook"
                   onClick={handleDeleteBookClick}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="25"
-                    height="25"
-                    viewBox="0 0 24 24"
-                  >
-                    <g
-                      fill="red"
-                      stroke="white"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1"
-                    >
-                      <path
-                        strokeDasharray="20"
-                        strokeDashoffset="20"
-                        d="M3 21h18"
-                      >
-                        <animate
-                          fill="freeze"
-                          attributeName="stroke-dashoffset"
-                          dur="0.2s"
-                          values="20;0"
-                        />
-                      </path>
-                      <path
-                        strokeDasharray="48"
-                        strokeDashoffset="48"
-                        d="M7 17v-4l10 -10l4 4l-10 10h-4"
-                      >
-                        <animate
-                          fill="freeze"
-                          attributeName="stroke-dashoffset"
-                          begin="0.2s"
-                          dur="0.6s"
-                          values="48;0"
-                        />
-                      </path>
-                      <path
-                        strokeDasharray="8"
-                        strokeDashoffset="8"
-                        d="M14 6l4 4"
-                      >
-                        <animate
-                          fill="freeze"
-                          attributeName="stroke-dashoffset"
-                          begin="0.8s"
-                          dur="0.2s"
-                          values="8;0"
-                        />
-                      </path>
-                    </g>
-                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="#ffffff" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"/></svg>
                   Eliminar libro
                 </button>
               </div>
