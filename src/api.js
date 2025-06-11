@@ -1,6 +1,7 @@
 /* eslint-disable no-throw-literal */
 import axios from "axios";
 
+//URL base del backend
 const baseURL = "https://n3xus.onrender.com/api";
 
 const axiosInstance = axios.create({
