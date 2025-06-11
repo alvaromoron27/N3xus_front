@@ -1,7 +1,7 @@
 /* eslint-disable no-throw-literal */
 import axios from "axios";
 
-const baseURL = "http://localhost:3021/api";
+const baseURL = "https://n3xus.onrender.com/api";
 
 const axiosInstance = axios.create({
   baseURL,
