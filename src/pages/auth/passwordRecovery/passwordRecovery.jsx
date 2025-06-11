@@ -61,7 +61,7 @@ function PasswordRecovery() {
                             {...formik.getFieldProps("correo")}
                             style={{
                                 borderColor:
-                                    formik.touched.correo && formik.errors.correo ? "red" : "",
+                                    formik.touched.correo && formik.errors.correo ? "rgb(175, 71, 63)" : "",
                             }}
                         />
                         <svg
@@ -77,7 +77,7 @@ function PasswordRecovery() {
                         </svg>
                     </div>
                     {formik.touched.correo && formik.errors.correo && (
-                        <p className="error-message">{formik.errors.correo}</p>
+                        <p className="recoveryPassword-error-message">{formik.errors.correo}</p>
                     )}
                     {errorMessage && <p className="error-message">{errorMessage}</p>}
                 </div>

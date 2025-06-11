@@ -98,7 +98,7 @@ const Register = () => {
               name='usuario'
               placeholder='Usuario'
               {...formik.getFieldProps('usuario')}
-              style={{ borderColor: formik.touched.usuario && formik.errors.usuario ? 'red' : '' }}
+              style={{ borderColor: formik.touched.usuario && formik.errors.usuario ? 'rgb(175, 71, 63)' : '' }}
             />
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256"><path fill="currentColor" d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56" /></svg>
           </div>
@@ -112,7 +112,7 @@ const Register = () => {
               name='nombre'
               placeholder='Nombre'
               {...formik.getFieldProps('nombre')}
-              style={{ borderColor: formik.touched.nombre && formik.errors.nombre ? 'red' : '' }}
+              style={{ borderColor: formik.touched.nombre && formik.errors.nombre ? 'rgb(175, 71, 63)' : '' }}
             />
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256"><path fill="currentColor" d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56" /></svg>
           </div>
@@ -126,7 +126,7 @@ const Register = () => {
               name='apellidos'
               placeholder='Apellidos'
               {...formik.getFieldProps('apellidos')}
-              style={{ borderColor: formik.touched.apellidos && formik.errors.apellidos ? 'red' : '' }}
+              style={{ borderColor: formik.touched.apellidos && formik.errors.apellidos ? 'rgb(175, 71, 63)' : '' }}
             />
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256"><path fill="currentColor" d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56" /></svg>
           </div>
@@ -140,7 +140,7 @@ const Register = () => {
               name='correo'
               placeholder='Email'
               {...formik.getFieldProps('correo')}
-              style={{ borderColor: formik.touched.correo && formik.errors.correo ? 'red' : '' }}
+              style={{ borderColor: formik.touched.correo && formik.errors.correo ? 'rgb(175, 71, 63)' : '' }}
             />
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M28 6H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2m-2.2 2L16 14.78L6.2 8ZM4 24V8.91l11.43 7.91a1 1 0 0 0 1.14 0L28 8.91V24Z" /></svg>
           </div>
@@ -154,7 +154,7 @@ const Register = () => {
               name='contraseña'
               placeholder='Contraseña'
               {...formik.getFieldProps('contraseña')}
-              style={{ borderColor: formik.touched.contraseña && formik.errors.contraseña ? 'red' : '' }}
+              style={{ borderColor: formik.touched.contraseña && formik.errors.contraseña ? 'rgb(175, 71, 63)' : '' }}
             />
             <button
               type="button"
@@ -182,7 +182,7 @@ const Register = () => {
               name='confirmarContraseña'
               placeholder='Confirmar contraseña:'
               {...formik.getFieldProps('confirmarContraseña')}
-              style={{ borderColor: formik.touched.confirmarContraseña && formik.errors.confirmarContraseña ? 'red' : '' }}
+              style={{ borderColor: formik.touched.confirmarContraseña && formik.errors.confirmarContraseña ? 'rgb(175, 71, 63)' : '' }}
             />
             <button
               type="button"

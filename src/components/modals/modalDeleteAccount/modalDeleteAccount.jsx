@@ -30,6 +30,8 @@ function ModalDeleteAccount (props){
             }, 2000)
           } catch (error) {
             console.error("Error eliminando la cuenta:", error);
+            setError(error.message === "Network Error" ? "Error de red" : null)
+            setLoading(false)
           }
     };
 
@@ -37,11 +39,11 @@ function ModalDeleteAccount (props){
         <div className='modal-overlay'>
             <div className="modal-contentDeleteBook">
             {loading ? 'Eliminando...' : '¿Seguro que deseas eliminar la cuenta?'}
-            {error && <p className="error" style={{color:'red'}}>{error}</p>}
-            {success && <p className="success" style={{color:'green'}}>{success}</p>}
+            {error && <p className="error" style={{color:'rgb(128, 0, 0)', backgroundColor:'rgb(252, 124, 124)', padding:'10px', border:'1px solid rgb(128, 0, 0)', borderRadius:'8px'}}>{error}</p>}
+            {success && <p className="success" style={{color:'rgb(0, 56, 0)', backgroundColor:'rgb(114, 255, 114)', padding:'10px', border:'1px solid rgb(1, 131, 1)', borderRadius:'8px'}}>{success}</p>}
                 <div className="modalDeleteBook-buttons">
-                    <button className='modalDeleteBook-delete' onClick={handleDelete} disabled={loading} style={{color:'white'}}>Eliminar</button>
-                    <button className='modalDeleteBook-cancel' onClick={props.onClose}>Cancelar</button>
+                    <button className='modalDeleteBook-delete' onClick={handleDelete} disabled={loading} style={{color:'white', border:'1px solid black'}}>Eliminar</button>
+                    <button className='modalDeleteBook-cancel' onClick={props.onClose} style={{border:'1px solid black'}}>Cancelar</button>
                 </div>
             </div>
         </div>

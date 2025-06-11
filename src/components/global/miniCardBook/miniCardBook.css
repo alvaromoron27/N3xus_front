@@ -1,13 +1,13 @@
 .ebook-card {
     display: flex;
     flex-direction: row;
-    border: 1px solid rgb(192, 192, 192);
+    border: 1px solid #616161;
     border-radius: 5px;
     width: 430px;
     height: 170px;
     justify-content: space-between;
-    background-color: white;
-    box-shadow: 0 0 10px #383838;
+    background-color: #363636;
+    box-shadow: 0 0 10px #000000;
     word-break: break-word;
     transition: transform 0.3s, box-shadow 0.3s;
 }

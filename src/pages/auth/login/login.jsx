@@ -265,7 +265,7 @@ function Login() {
                     borderColor:
                       formik.touched.identificador &&
                       formik.errors.identificador
-                        ? "red"
+                        ? "rgb(175, 71, 63)"
                         : "",
                   }}
                 />
@@ -282,7 +282,7 @@ function Login() {
                 </svg>
               </div>
               {formik.touched.identificador && formik.errors.identificador && (
-                <p className="login-error-message">{formik.errors.identificador}</p>
+                <p className="login-error-message-input">{formik.errors.identificador}</p>
               )}
             </div>
             <div>
@@ -295,9 +295,9 @@ function Login() {
                   {...formik.getFieldProps("contraseña")}
                   style={{
                     borderColor:
-                      formik.touched.identificador &&
-                      formik.errors.identificador
-                        ? "red"
+                      formik.touched.contraseña &&
+                      formik.errors.contraseña
+                        ? "rgb(175, 71, 63)"
                         : "",
                   }}
                 />
@@ -335,7 +335,7 @@ function Login() {
                 </button>
               </div>
               {formik.touched.contraseña && formik.errors.contraseña && (
-                <p className="login-error-message">{formik.errors.contraseña}</p>
+                <p className="login-error-message-input">{formik.errors.contraseña}</p>
               )}
               <p className="forgotPassword" onClick={handleRecoveryClick}>
                 He olvidado mi contraseña

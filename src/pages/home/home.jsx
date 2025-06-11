@@ -12,7 +12,7 @@ function Home() {
   const [ebooks, setEbooks] = useState([]);
   const [query, setQuery] = useState("");
   const [filteredEbooks, setFilteredEbooks] = useState([]);
-  const [tagSelected, setTagSelected] = useState("news");
+  const [tagSelected, setTagSelected] = useState("Novedades");
   const [selectedCategory, setSelectedCategory] = useState("Categorías");
   const dataUser = useSelector((state) => state.auth);
   const [showModalAddEbook, setShowModalAddEbook] = useState(false);
@@ -39,9 +39,9 @@ function Home() {
     const fetchFilteredEbooks = async () => {
       try {
         let data = [];
-        if (tagSelected === "news") {
+        if (tagSelected === "Novedades") {
           data = await getNewsBooks();
-        } else if (tagSelected === "all") {
+        } else if (tagSelected === "Todos") {
           data = ebooks;
         } else {
           data = await getBooksByCategory(selectedCategory);
@@ -68,9 +68,9 @@ function Home() {
       // Si no hay query, restablece el filtro según el tag seleccionado
       const updateFilteredEbooks = async () => {
         let data = [];
-        if (tagSelected === "news") {
+        if (tagSelected === "Novedades") {
           data = await getNewsBooks();
-        } else if (tagSelected === "all") {
+        } else if (tagSelected === "Todos") {
           data = ebooks;
         } else {
           data = await getBooksByCategory(selectedCategory);
@@ -87,7 +87,7 @@ function Home() {
       setTagSelected(tag);
       setQuery(""); // Limpia la búsqueda al seleccionar un nuevo tag
       setSelectedCategory(
-        tag === "news" || tag === "all" ? "Categorías" : selectedCategory
+        tag === "Novedades" || tag === "Novedades" ? "Categorías" : selectedCategory
       );
     }
   }
@@ -101,7 +101,7 @@ function Home() {
     <div className="home">
       <Header />
       <div className="home-head">
-        <h1>Libros</h1>
+        <h1>{tagSelected}</h1>
         <div className="input-wrapper">
           <input
             type="text"
@@ -130,18 +130,18 @@ function Home() {
         <div className="filter-ebooks">
           <div
             className={`filter-ebooks-tag ${
-              query === "" && tagSelected === "news"
+              query === "" && tagSelected === "Novedades"
                 ? "filter-ebooks-tag-news"
                 : ""
             }`}
-            onClick={() => handleSelectedTag("news")}
+            onClick={() => handleSelectedTag("Novedades")}
           >
             Novedades
           </div>
           <div className="dropdown">
             <button
               className={`dropdown-button ${
-                query === "" && tagSelected !== "news" && tagSelected !== "all"
+                query === "" && tagSelected !== "Novedades" && tagSelected !== "Todos"
                   ? "filter-ebooks-tag-categories"
                   : ""
               }`}
@@ -177,11 +177,11 @@ function Home() {
           </div>
           <div
             className={`filter-ebooks-tag ${
-              query === "" && tagSelected === "all"
+              query === "" && tagSelected === "Todos"
                 ? "filter-ebooks-tag-all"
                 : ""
             }`}
-            onClick={() => handleSelectedTag("all")}
+            onClick={() => handleSelectedTag("Todos")}
           >
             Todos
           </div>
@@ -203,18 +203,19 @@ function Home() {
                 d="M6.125 12.15q.65-1.65 1.563-3.175T9.75 6.1l-1.3-.275q-.5-.1-.975.05t-.825.5L3.5 9.525q-.375.375-.288.9t.588.725zm14.7-9.75q-2.65-.125-5.037 1.025T11.525 6.45q-1.2 1.2-2.113 2.6T7.826 12q-.125.325-.125.663t.25.587l3.125 3.125q.25.25.588.25t.662-.125q1.55-.675 2.95-1.588t2.6-2.112q1.875-1.875 3.025-4.262T21.925 3.5q0-.2-.1-.4t-.25-.35t-.35-.25t-.4-.1m-6.35 7.45q-.575-.575-.575-1.412t.575-1.413t1.413-.575t1.412.575t.575 1.413T17.3 9.85t-1.412.575t-1.413-.575m-2.3 8.35l1 2.325q.2.5.725.6t.9-.275l3.15-3.15q.35-.35.5-.837t.05-.988l-.25-1.3q-1.375 1.15-2.887 2.063T12.175 18.2M4.05 16.05q.875-.875 2.125-.888t2.125.863t.875 2.125t-.875 2.125q-1.2 1.2-2.838 1.425t-3.287.45q.225-1.65.463-3.287T4.05 16.05"
               />
             </svg>
-            <span className="add_book">Añadir Libro!</span>
+            <span className="add_book">Añadir Libro</span>
           </button>
         ) : (
           ""
         )}
       </div>
-      {query !== "" && <p>Resultados de la búsqueda:</p>}
-      <p>{`${filteredEbooks.length} coincidencias`}</p>
-      <div className="all-ebooks">
+      <div className="home-results">
+        <p>{filteredEbooks.length === 1 ? `${filteredEbooks.length} libro` : `${filteredEbooks.length} libros`}</p>
+        <div className="all-ebooks">
         {filteredEbooks.map((ebook) => (
           <MiniCardBook key={ebook.id} ebook={ebook} />
         ))}
+      </div>
       </div>
       {showModalAddEbook && (
         <ModalAddBook onClose={() => setShowModalAddEbook(false)} />

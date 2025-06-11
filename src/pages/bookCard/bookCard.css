@@ -11,7 +11,9 @@
   width: 80%;
   padding: 20px;
   border-radius: 8px;
-  background-color: #ffffff;
+  color: white;
+  background-color: #101010;
+  border: 1px solid #191919;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin: 20px auto;
   transition: transform 0.3s, box-shadow 0.3s;
@@ -42,10 +44,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(15, 15, 15);
+  background-color: #101010;
+  border: 1px solid #646464;
   color: white;
   border-radius: 10px;
-  border: none;
   height: 35px;
   transition: all 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
   font-family: 'regular';
@@ -54,7 +56,7 @@
 }
 
 .ebookCard-saveEbook:hover {
-  box-shadow: 0 0 12px rgb(34, 34, 34);
+  box-shadow: 0 0 12px rgb(131, 131, 131);
   transition: all 0.2s step-start;
 }
 
@@ -63,6 +65,7 @@
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
+  color: white;
 }
 
 .ebookCard-data {
@@ -73,7 +76,7 @@
 .ebookCard p {
   margin: 8px 0;
   /* Espacio entre párrafos */
-  color: #161616;
+  color: white;
   /* Color del texto más oscuro */
   line-height: 1.5;
   /* Altura de línea para mejor legibilidad */

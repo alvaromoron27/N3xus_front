@@ -108,7 +108,7 @@ function ResetPassword() {
                 style={{
                   borderColor:
                     formik.touched.contraseña && formik.errors.contraseña
-                      ? "red"
+                      ? "rgb(175, 71, 63)"
                       : "",
                 }}
               />
@@ -161,7 +161,7 @@ function ResetPassword() {
                   borderColor:
                     formik.touched.confirmarContraseña &&
                     formik.errors.confirmarContraseña
-                      ? "red"
+                      ? "rgb(175, 71, 63)"
                       : "",
                 }}
               />
