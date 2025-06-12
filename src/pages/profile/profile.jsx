@@ -1,5 +1,6 @@
 import "./styleProfile.css";
 import React, { useRef, useState } from "react";
+import * as Yup from "yup";
 import Header from "../../components/global/header/header.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import ModalSavedBooks from "../../components/modals/modalSavedBooks/modalSavedBooks.jsx";
@@ -49,6 +50,10 @@ function Profile() {
   const [modalSavedEbookOpen, setModalSavedEbookOpen] = useState(false);
   const [modalUploadedEbookOpen, setModalUploadedEbookOpen] = useState(false);
   const [modalDeleteAccountOpen, setModalDeleteAccountOpen] = useState(false);
+
+  const emailSchema = Yup.string()
+    .email("Correo electrónico inválido")
+    .required("El correo es obligatorio");
 
   const handleClick = () => {
     inputRef.current.click(); // Abre el explorador de archivos
@@ -206,12 +211,24 @@ function Profile() {
         }
         setIsEditingSurname(!isEditingSurname);
         break;
+
       case "email":
         if (isEditingEmail) {
           if (tempEmail === user.Correo) {
             setIsEditingEmail(false);
             return;
           }
+
+          // Aquí validamos el email antes de llamar a la API
+          try {
+            await emailSchema.validate(tempEmail);
+          } catch (validationError) {
+            setErrorMsgEmail(validationError.message);
+            setSuccessMsgEmail("");
+            setTimeout(() => setErrorMsgEmail(""), 5000);
+            return; // Salimos porque el email no es válido
+          }
+
           try {
             const result = await editEmail(user.Id, tempEmail); // leer el texto devuelto por el servidor
 

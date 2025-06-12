@@ -229,6 +229,35 @@
   text-align: center;
 }
 
+@media (min-width: 680px) and (max-width: 800px) {
+  .home {
+    align-items: center;
+  }
+
+  .home-head {
+    flex-direction: column;
+    height: auto;
+    padding: 20px;
+    margin-right: 0;
+  }
+  .input-wrapper {
+    max-width: 260px;
+    margin-top: 10px;
+  }
+
+  .home-head .input-wrapper .right-input {
+    width: 100%;
+    padding-right: 35px;
+  }
+
+  .input-wrapper .input-icon {
+    right: 10px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+
 /* Móviles */
 @media (max-width: 680px) {
   .home {

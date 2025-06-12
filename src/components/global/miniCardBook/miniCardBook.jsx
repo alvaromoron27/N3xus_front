@@ -16,6 +16,7 @@ function MiniCardBook (props) {
     return (
         <div
             className="ebook-card"
+            title={props.ebook.titulo}
             onClick={() => handleEbookClick(props.ebook)}
           >
             <img

@@ -31,9 +31,9 @@ const Register = () => {
       .max(15, 'El usuario debe tener como máximo 15 caracteres')
       .matches(/^[^\s]+$/, 'El usuario no puede contener espacios'),
       nombre: Yup.string().required('El nombre es obligatorio')
-      .max(25, 'El nombre debe tener como máximo 25 caracteres'),
+      .max(35, 'El nombre debe tener como máximo 35 caracteres'),
       apellidos: Yup.string().required('Los apellidos son obligatorios')
-      .max(30, 'Los apellidos deben tener como máximo 30 caracteres'),
+      .max(50, 'Los apellidos deben tener como máximo 50 caracteres'),
       correo: Yup.string().email('Correo electrónico inválido').required('El correo es obligatorio'),
       contraseña: Yup.string()
         .min(8, 'La contraseña debe tener al menos 8 caracteres')
