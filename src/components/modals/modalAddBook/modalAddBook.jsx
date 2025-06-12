@@ -140,6 +140,7 @@ const ModalAddBook = ({
               id="titulo"
               value={formData.titulo}
               onChange={handleChange}
+              placeholder="Introduce aquí el título del libro"
               required
             />
           </div>
@@ -153,6 +154,7 @@ const ModalAddBook = ({
               id="autor"
               value={formData.autor}
               onChange={handleChange}
+              placeholder="Introduce aquí el nombre del autor"
               required
             />
           </div>
@@ -162,7 +164,7 @@ const ModalAddBook = ({
               Descripción o Sinopsis
             </label>
             <textarea
-              placeholder="Introduce aquí una descripción o sinopsis del ebook"
+              placeholder="Introduce aquí una descripción o sinopsis del libro"
               id="descripcion"
               cols="40"
               rows="7"
@@ -183,7 +185,7 @@ const ModalAddBook = ({
               onChange={handleChange}
               required
               min="1"
-              max="5000"
+              max="150000"
             />
           </div>
 

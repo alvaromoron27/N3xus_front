@@ -12,14 +12,7 @@ html {
     min-height: 100vh;
 }
 
-.register_form h1 {
-    color: white;
-    font-family: 'bold';
-    letter-spacing: 4px;
-}
-
 .register_form {
-    color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -30,9 +23,16 @@ html {
     font-size: large;
     width: 270px;
     backdrop-filter: blur(6px);
-    margin-top: 12vh;
+    margin-top: 4vh;
+    color: white;
     background-color: #101010;
     border: 1px solid #191919;
+}
+
+.register_form h1 {
+    color: white;
+    font-family: 'bold';
+    letter-spacing: 4px;
 }
 
 .register_form div {
@@ -125,7 +125,8 @@ html {
     font-family: 'bold';
     margin: 0;
     margin-top: 15px;
-    padding: 0;
+    padding: 10px;
+    margin-bottom: 20px
 }
 
 .linkLogin a {

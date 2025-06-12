@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 function ConfirmAccount() {
   const { token } = useParams();
   const [message, setMessage] = useState(
-    "Cuenta confirmada correctamente. En unos momentos se redirigirá a la página de inicio de sesión."
+    "Confirmando tu cuenta, por favor espera..."
   );
 
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ function ConfirmAccount() {
     return () => clearTimeout(timer); // Limpiar el temporizador al desmontar el componente
   }, [token, dispatch, navigate]);
 
-  return <p>{message}</p>;
+  return <p className="confirm-account-message">{message}</p>;
 }
 
 export default ConfirmAccount;

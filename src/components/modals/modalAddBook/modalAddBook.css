@@ -18,10 +18,11 @@
   max-width: 900px;
   max-height: 80vh;
   position: relative;
-  border: 2px solid rgb(38, 57, 109);
   overflow-y: auto;
-  background-color: #f9f9f9;
   box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.7);
+  color: white;
+  background-color: #101010;
+  border: 1px solid #191919;
 }
 
 .modal-content-addEbook h2 {
@@ -48,21 +49,18 @@
   max-width: 600px;
   width: 80%;
   margin: 0 auto;
-  /* Centra el formulario horizontalmente */
   padding: 20px;
   border-radius: 10px;
   font-family: 'regular';
+  color: white;
 }
 
-/* Estilo para las etiquetas del formulario */
 .modal-content-addEbook-form label {
   display: block;
-  font-weight: bold;
   margin-bottom: 8px;
-  color: #1b1b1b;
+  color: white;
 }
 
-/* Estilo para los inputs y selectores */
 .modal-content-addEbook-form input[type="text"],
 .modal-content-addEbook-form input[type="number"],
 .modal-content-addEbook-form input[type="file"],
@@ -71,30 +69,44 @@
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid rgb(82, 82, 82);
   border-radius: 5px;
   font-size: 16px;
   box-sizing: border-box;
-  background-color: #fff;
+  background-color: transparent;
   font-family: 'regular';
+  color: white;
+  outline: none;
+}
+
+.modal-content-addEbook-form input[type="date"] {
+  padding: 10px;
+  background-color: transparent;
+  color: white;
+  border: 1px solid rgb(82, 82, 82);
+  border-radius: 5px;
+}
+
+.modal-content-addEbook-form-group select option{
+  background-color: #101010;
+  color: white;
 }
 
 /* Estilo para el botón de envío */
 .modal-content-addEbook-form button[type="submit"] {
-  background-color: #0a0c5c;
-  color: white;
+  color: black;
   padding: 10px 20px;
-  border: none;
+  border: 1px solid rgb(44, 136, 255);
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: 'regular';
+  background-color: rgb(67, 67, 182);
 }
 
 /* Cambio de color en hover para el botón */
 .modal-content-addEbook-form button[type="submit"]:hover {
-  background-color: #050533;
   box-shadow: 1px 1px 10px #333;
 }
 
@@ -115,13 +127,17 @@
   align-items: center;
   justify-content: center;
   border-radius: 100%;
-  width: 30px;
-  height: 30px;
+  width: 45px;
+  height: 45px;
   transition: all 0.1s ease-in-out;
+  color: white;
+  border: 1px solid #a6a6a6;
 }
 
 .close-button:hover {
-  background-color: rgb(194, 194, 194);
+  background-color: rgb(238, 238, 238);
+  color: black;
+  border: 1px solid #2e2e2e;
 }
 
 .modal-content-addEbook-save {

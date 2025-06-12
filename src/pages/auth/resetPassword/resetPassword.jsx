@@ -89,7 +89,9 @@ function ResetPassword() {
       ) : (
         ""
       )}
-      {!errorMessage ? (
+      {errorMessage ? (
+        <p className="resetPassword-errorToken-message">Token inválido o no proporcionado.</p>
+      ) : (
         <form
           className={`resetPassword_form ${
             succesfullMessage ? "formDisplayNone" : ""
@@ -214,8 +216,6 @@ function ResetPassword() {
             />
           </div>
         </form>
-      ) : (
-        <p>Token inválido o no proporcionado.</p>
       )}
     </div>
   );
