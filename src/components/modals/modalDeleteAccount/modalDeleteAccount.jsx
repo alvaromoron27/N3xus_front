@@ -27,7 +27,7 @@ function ModalDeleteAccount (props){
             dispatch(clearStateEbookSelected());
             setTimeout(function(){
                 navigate('/')
-            }, 2000)
+            }, 0)
           } catch (error) {
             console.error("Error eliminando la cuenta:", error);
             setError(error.message === "Network Error" ? "Error de red" : null)
@@ -42,7 +42,7 @@ function ModalDeleteAccount (props){
             {error && <p className="error" style={{color:'rgb(128, 0, 0)', backgroundColor:'rgb(252, 124, 124)', padding:'10px', border:'1px solid rgb(128, 0, 0)', borderRadius:'8px'}}>{error}</p>}
             {success && <p className="success" style={{color:'rgb(0, 56, 0)', backgroundColor:'rgb(114, 255, 114)', padding:'10px', border:'1px solid rgb(1, 131, 1)', borderRadius:'8px'}}>{success}</p>}
                 <div className="modalDeleteBook-buttons">
-                    <button className='modalDeleteBook-delete' onClick={handleDelete} disabled={loading} style={{color:'white', border:'1px solid black'}}>Eliminar</button>
+                    <button className='modalDeleteBook-delete' onClick={handleDelete} disabled={loading}>Eliminar</button>
                     <button className='modalDeleteBook-cancel' onClick={props.onClose} style={{border:'1px solid black'}}>Cancelar</button>
                 </div>
             </div>

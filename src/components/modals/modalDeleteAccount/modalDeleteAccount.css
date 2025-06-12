@@ -1,0 +1,27 @@
+.modal-overlay .modal-contentDeleteBook{
+    background-color: #101010;
+    border-radius: 6px;
+    border: 1px solid #191919;
+    color: white;
+    max-width: 90vw;
+}
+
+.modalDeleteBook-buttons .modalDeleteBook-delete{
+color:white;
+border: 1px solid black;
+background-color: rgba(253, 0, 0, 0.219);
+font-family: 'regular';
+font-weight: normal;
+}
+
+.modalDeleteBook-buttons .modalDeleteBook-delete:hover{
+    box-shadow: none;
+}
+
+.modalDeleteBook-buttons .modalDeleteBook-cancel{
+color:black;
+border: 1px solid black;
+background-color: rgb(255, 255, 255);
+font-family: 'regular';
+font-weight: normal;
+}

@@ -15,12 +15,12 @@
   justify-content: space-between;
   position: relative;
   width: 55vw;
-  max-width: 1000px;
   height: auto;
   background-color: #101010;
   border-radius: 6px;
   border: 1px solid #191919;
-  margin: 20px;
+  margin-bottom: 20px;
+  margin-right: 2.5vw;
   padding: 15px;
 }
 
@@ -239,6 +239,7 @@
     flex-direction: column;
     height: auto;
     padding: 20px;
+    margin-right: 0;
   }
 
   .input-wrapper {

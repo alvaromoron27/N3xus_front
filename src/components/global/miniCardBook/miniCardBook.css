@@ -4,7 +4,7 @@
     border: 1px solid #616161;
     border-radius: 5px;
     width: 430px;
-    height: 170px;
+    height: auto;
     justify-content: space-between;
     background-color: #363636;
     box-shadow: 0 0 10px #000000;
@@ -14,7 +14,7 @@
 
 .ebook-miniCard-data-front-ebook {
     width: 115px;
-    height: 100%;
+    height: auto;
     border-radius: 3px;
     object-fit: cover;
 }
