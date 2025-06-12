@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  selectedBook: null, // Para almacenar el libro seleccionado
+  selectedBook: null,
 };
 
 const bookSlice = createSlice({
@@ -18,13 +18,21 @@ const bookSlice = createSlice({
     editBookReducer: (state, action) => {
       state.selectedBook = action.payload;
     },
+    addCommentToSelectedBook: (state, action) => {
+      if (state.selectedBook && state.selectedBook.comments) {
+        state.selectedBook.comments.push(action.payload);
+      } else if (state.selectedBook) {
+        state.selectedBook.comments = [action.payload];
+      }
+    },
   },
 });
 
 export const {
   selectBook,
   clearStateEbookSelected,
-  editBookReducer
+  editBookReducer,
+  addCommentToSelectedBook,
 } = bookSlice.actions;
 
 export default bookSlice.reducer;

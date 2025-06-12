@@ -1,0 +1,10 @@
+.comment{
+    width: 90vw;
+    color: white;
+  background-color: #101010;
+  border: 1px solid #191919;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 5px;
+  margin: 10px auto;
+}
