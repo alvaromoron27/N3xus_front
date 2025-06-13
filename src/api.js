@@ -364,3 +364,15 @@ export const getComments = async (bookId) => {
     throw error;
   }
 };
+
+
+// Función obtener un usuario por su id
+export const getUserById = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/get-user/${userId}`);
+    return response.data.user; // devuelve el usuario
+  } catch (error) {
+    console.error("Error al obtener el usuario:", error);
+    throw error;
+  }
+};

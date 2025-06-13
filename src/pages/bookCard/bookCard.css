@@ -153,15 +153,32 @@
 
 .bookCard-write-comment {
   width: 90vw;
+  position: sticky;
+  bottom: 20px;
+  z-index: 10;
+  margin-top: 2rem;
   max-width: 800px;
   color: white;
-  background-color: #101010;
-  border: 1px solid #191919;
+  background-color: #252525;
+  border: 1px solid #ffffff8e;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 20px;
   margin: 10px auto;
   font-family: 'regular';
+}
+
+.bookCard-write-comment.sticky-comment {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+  width: calc(100% - 3rem);
+  max-width: 600px;
 }
 
 .bookCard-write-comment-content{
@@ -173,7 +190,7 @@
 
 .bookCard-write-comment-textarea{
   display: flex;
-  background-color: transparent;
+  background-color: #101010;
   border-radius: 6px;
   border: 1px solid gray;
   font-family: 'regular';
@@ -191,7 +208,7 @@
   width: 75px;
   background-color: transparent;
   border-radius: 6px;
-  border: 1px solid rgb(65, 65, 65);
+  border: 1px solid rgb(122, 122, 122);
   color: white;
   font-family: 'regular';
   transition: all 0.3s ease-in-out;
@@ -204,6 +221,7 @@
 .comments-section{
   color: white;
   font-family: 'regular';
+  margin-bottom: 100px;
 }
 
 /* Móviles */

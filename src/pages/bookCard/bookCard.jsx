@@ -2,7 +2,7 @@ import "./bookCard.css";
 import { useSelector, useDispatch } from "react-redux";
 import Header from "../../components/global/header/header";
 import { formatDate } from "../../global/functions/globalFunctions";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   saveBook,
   removeSavedBook,
@@ -37,6 +37,32 @@ function BookCard() {
 
   const savedEbooksIds = savedEbooks.map((b) => b.id).join(",");
   const isSaved = savedEbooksIds.includes(bookSelected?.id);
+
+  const [isSticky, setIsSticky] = useState(false);
+  const markerRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSticky(!entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0,
+        rootMargin: "0px 0px -100% 0px",
+      }
+    );
+
+    if (markerRef.current) {
+      observer.observe(markerRef.current);
+    }
+
+    return () => {
+      if (markerRef.current) {
+        observer.unobserve(markerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!bookSelected?.id) {
@@ -276,31 +302,36 @@ function BookCard() {
           )}
         </div>
       </div>
-      {isAuthenticated ? (
-        <div className="bookCard-write-comment">
-          <form
-            className="bookCard-write-comment-content"
-            onSubmit={handleSubmit}
+      {isAuthenticated && (
+        <>
+          <div ref={markerRef} style={{ height: 1 }} />
+          <div
+            className={`bookCard-write-comment ${
+              isSticky ? "sticky-comment" : ""
+            }`}
           >
-            <textarea
-              className="bookCard-write-comment-textarea"
-              value={content}
-              onChange={(e) => {
-                if (e.target.value.length <= maxChars) {
-                  setContent(e.target.value);
-                }
-              }}
-              placeholder="Escribe tu comentario..."
-            />
-            <div>
-              {content.length} / {maxChars}
-            </div>
-            <button type="submit" disabled={content.length === 0}>
-              Enviar
-            </button>
-          </form>
-        </div>
-      ) : null}
+            <form
+              className="bookCard-write-comment-content"
+              onSubmit={handleSubmit}
+            >
+              <textarea
+                className="bookCard-write-comment-textarea"
+                value={content}
+                onChange={(e) => {
+                  if (e.target.value.length <= maxChars) {
+                    setContent(e.target.value);
+                  }
+                }}
+                placeholder="Escribe tu comentario..."
+              />
+              <div>
+                {content.length} / {maxChars}
+              </div>
+              <button disabled={content.trim().length === 0}>Enviar</button>
+            </form>
+          </div>
+        </>
+      )}
       <div className="comments-section">
         {comments.length === 0 ? (
           <p>No hay comentarios aún.</p>
@@ -311,6 +342,7 @@ function BookCard() {
               content={comment.content}
               userId={comment.user_id}
               createdAt={comment.created_at}
+              isAuthenticated={isAuthenticated}
               // Puedes agregar más props si tu componente las recibe,
               // por ejemplo nombre de usuario, avatar, etc.
             />

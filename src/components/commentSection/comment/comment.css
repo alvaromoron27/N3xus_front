@@ -8,3 +8,40 @@
   padding: 5px;
   margin: 10px auto;
 }
+
+.comment-user{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comment-image{
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+}
+
+.comment p{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.comment-footer{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comment-footer button{
+  background-color: transparent;
+  outline: none;
+  border: 1px solid gray;
+  color: white;
+  border-radius: 6px;
+  width: 100px;
+  height: 30px;
+}
+
+.comment-footer button:hover{
+  box-shadow: 1px 1px 6px gray;
+}
