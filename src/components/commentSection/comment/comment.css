@@ -1,6 +1,6 @@
-.comment{
-    width: 90vw;
-    color: white;
+.comment {
+  width: 90vw;
+  color: white;
   background-color: #101010;
   border: 1px solid #191919;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -9,30 +9,85 @@
   margin: 10px auto;
 }
 
-.comment-user{
+.comment-user {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.comment-image{
+.comment-user strong{
+  letter-spacing: 0.5px;
+}
+
+.comment-image {
   width: 40px;
   height: 40px;
   border-radius: 100%;
 }
 
-.comment p{
+.comment p {
   margin-left: 10px;
   margin-right: 10px;
 }
 
-.comment-footer{
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.comment-replies{
+  border-top: 1px solid rgb(172, 172, 172);
+  margin-top: 10px;
 }
 
-.comment-footer button{
+.comment-replies-button {
+  margin: 10px;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  color: rgb(163, 163, 163);
+  font-size: 15px;
+}
+
+.comment-replies-button-more {
+  border: none;
+  background-color: transparent;
+  font-family: 'regular';
+  color: rgb(163, 163, 163);
+  font-size: 15px;
+}
+
+.comment-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 95%;
+  margin: 0 auto;
+}
+
+.comment-footer-options{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.comment-footer-like.like{
+  color: transparent;
+  stroke: white;
+}
+
+.comment-footer-like.dislike{
+  color: rgb(190, 53, 43);
+  stroke: rgb(190, 53, 43);
+}
+
+.comment-footer-like svg path{
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 2px;
+}
+
+.comment-footer small{
+  color: rgb(172, 172, 172);
+}
+
+.comment-footer button {
   background-color: transparent;
   outline: none;
   border: 1px solid gray;
@@ -40,8 +95,39 @@
   border-radius: 6px;
   width: 100px;
   height: 30px;
+  font-family: 'regular';
 }
 
-.comment-footer button:hover{
+.comment-footer button:hover {
   box-shadow: 1px 1px 6px gray;
+}
+
+.reply {
+  border: 1px solid rgba(255, 255, 255, 0.37);
+  margin-left: 30px;
+  border-radius: 6px;
+  margin-top: 10px;
+  background-color: rgb(24, 24, 24);
+  padding: 7px;
+}
+
+.reply p{
+  margin: 10px;
+  margin-bottom: 3px;
+}
+
+.reply-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reply-user img {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+}
+
+.reply-user strong{
+  letter-spacing: 0.5px;
 }

@@ -2,8 +2,8 @@
 import axios from "axios";
 
 //URL base del backend
-const baseURL = "https://n3xus.onrender.com/api";
-//const baseURL = "http://localhost:3021/api";
+//const baseURL = "https://n3xus.onrender.com/api";
+const baseURL = "http://localhost:3021/api";
 
 const axiosInstance = axios.create({
   baseURL,
@@ -374,6 +374,30 @@ export const getUserById = async (userId) => {
     return response.data.user; // devuelve el usuario
   } catch (error) {
     console.error("Error al obtener el usuario:", error);
+    throw error;
+  }
+};
+
+// Función para agregar una nueva respuesta a un comentario
+export const writeReply = async (replyData) => {
+  try {
+    const response = await axiosInstance.post("/add-reply", replyData);
+    return response.data;
+  } catch (error) {
+    console.error("Error al publicar la respuesta:", error);
+    throw error;
+  }
+};
+
+// Función para obtener respuestas paginadas de un comentario
+export const getReplies = async (commentId, limit = 5, offset = 0) => {
+  try {
+    const response = await axiosInstance.get(
+      `/get-replies?commentId=${commentId}&limit=${limit}&offset=${offset}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener respuestas:", error);
     throw error;
   }
 };

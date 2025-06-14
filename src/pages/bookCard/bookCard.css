@@ -151,7 +151,7 @@
   box-shadow: 1px 1px 10px rgb(247, 59, 59);
 }
 
-.bookCard-write-comment {
+.bookCard-write.comment{
   position: fixed;
   bottom: 10px;
   left: 50%;
@@ -168,14 +168,59 @@
   font-family: 'regular';
 }
 
-.bookCard-write-comment-content{
+.bookCard-write.reply{
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: calc(100% - 3rem);
+  max-width: 600px;
+  color: white;
+  background-color: #252525;
+  border: 1px solid #ffffff8e;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  padding: 1rem;
+  padding-top: 0px;
+  font-family: 'regular';
+  margin: 0 auto;
+}
+
+.bookCard-write-replyTo{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bookCard-write-replyTo-close{
+  display: flex;
+  margin-left: 10px;
+  border: 1px solid gray;
+  border-radius: 100%;
+  padding: 5px;
+  color: white;
+}
+
+.bookCard-write-replyTo-close:hover{
+  box-shadow: 0 0px 10px rgba(255, 255, 255, 0.74);
+  background-color: white;
+  color: black;
+}
+
+.bookCard-write-replyTo-close svg path {
+  fill: currentColor;
+}
+
+.bookCard-write-content{
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
 }
 
-.bookCard-write-comment-textarea{
+.bookCard-write-textarea{
   display: flex;
   background-color: #101010;
   border-radius: 6px;
@@ -190,7 +235,7 @@
   padding: 5px;
 }
 
-.bookCard-write-comment-content button{
+.bookCard-write-content button{
   height: 36px;
   width: 75px;
   background-color: transparent;
@@ -201,7 +246,7 @@
   transition: all 0.3s ease-in-out;
 }
 
-.bookCard-write-comment-content button:hover{
+.bookCard-write-content button:hover{
   box-shadow: 1px 1px 15px rgba(255, 255, 255, 0.589);
 }
 
@@ -220,7 +265,7 @@
     justify-content: center;
   }
 
-  .bookCard-write-comment{
+  .bookCard-write{
     padding: 10px;
     flex-wrap: wrap;
     width: 80vw;

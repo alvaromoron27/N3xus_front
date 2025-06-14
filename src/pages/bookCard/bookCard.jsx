@@ -8,6 +8,7 @@ import {
   removeSavedBook,
   writeComment,
   getComments,
+  writeReply,
 } from "../../api";
 import {
   addSavedBook,
@@ -42,6 +43,9 @@ function BookCard() {
   const [uploadedByUser, setUploadedByUser] = useState(false);
   const [modalEditBookOpen, setModalEditBookOpen] = useState(false);
   const [modalDeleteBookOpen, setModalDeleteBookOpen] = useState(false);
+
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyUser, setReplyUser] = useState(null);
 
   const [content, setContent] = useState("");
   const maxChars = 1500;
@@ -105,15 +109,14 @@ function BookCard() {
   }, [bookSelected?.id, loadComments]);
 
   useEffect(() => {
-  if (!bookSelected?.id) {
-    setUploadedByUser(false);
-    setPulsedSaveEbook(false);
-    return;
-  }
-  setUploadedByUser(bookSelected.user_id === userId);
-  setPulsedSaveEbook(isSaved);
-}, [bookSelected?.id, bookSelected?.user_id, userId, isSaved]);
-
+    if (!bookSelected?.id) {
+      setUploadedByUser(false);
+      setPulsedSaveEbook(false);
+      return;
+    }
+    setUploadedByUser(bookSelected.user_id === userId);
+    setPulsedSaveEbook(isSaved);
+  }, [bookSelected?.id, bookSelected?.user_id, userId, isSaved]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -167,21 +170,58 @@ function BookCard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const { comment } = await writeComment({
-        content,
-        userId,
-        bookId: bookSelected.id,
-      });
-      // 1) Actualizar Redux
-      dispatch(addCommentToSelectedBook(comment));
-      // 2) Actualizar local para render inmediato
-      setComments((prev) => [comment, ...prev]);
+      if (replyingTo) {
+        // Estoy escribiendo una respuesta (reply)
+        const { reply } = await writeReply({
+          content,
+          userId,
+          commentId: replyingTo,
+        });
+        // Actualiza localmente las respuestas del comentario replyingTo
+        setComments((prevComments) =>
+          prevComments.map((comment) =>
+            comment.id === replyingTo
+              ? {
+                  ...comment,
+                  replies: comment.replies
+                    ? [reply, ...comment.replies]
+                    : [reply],
+                }
+              : comment
+          )
+        );
+      } else {
+        // Estoy escribiendo un comentario nuevo
+        const { comment } = await writeComment({
+          content,
+          userId,
+          bookId: bookSelected.id,
+        });
+        // Actualiza Redux (como ya haces)
+        dispatch(addCommentToSelectedBook(comment));
+        // Actualiza local para render inmediato
+        setComments((prev) => [comment, ...prev]);
+      }
+
+      // Limpia el formulario y estados de respuesta
       setContent("");
+      setReplyingTo(null);
     } catch (err) {
       console.error(err);
     }
   };
+
+  function handleSetReply(userName, commentId) {
+    if (replyingTo === commentId) {
+      setReplyingTo(null);
+      setReplyUser(null);
+    } else {
+      setReplyingTo(commentId);
+      setReplyUser(userName);
+    }
+  }
 
   return (
     <div className="container-EbookCard">
@@ -343,41 +383,66 @@ function BookCard() {
         </div>
       </div>
       {isAuthenticated && (
-        <>
-          <div className="bookCard-write-comment">
-            <form
-              className="bookCard-write-comment-content"
-              onSubmit={handleSubmit}
-            >
-              <textarea
-                className="bookCard-write-comment-textarea"
-                value={content}
-                onChange={(e) => {
-                  if (e.target.value.length <= maxChars) {
-                    setContent(e.target.value);
-                  }
-                }}
-                placeholder="Escribe tu comentario..."
-              />
-              <div>
-                {content.length} / {maxChars}
+        <div className={`bookCard-write ${replyingTo ? "reply" : "comment"}`}>
+          {replyingTo && (
+            <div className="bookCard-write-replyTo">
+              <p>
+                Responder a <strong>{replyUser}</strong>
+              </p>
+              <div
+              className="bookCard-write-replyTo-close"
+              onClick={() => handleSetReply(null, replyingTo)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="#ffffff"
+                    d="M18.36 19.78L12 13.41l-6.36 6.37l-1.42-1.42L10.59 12L4.22 5.64l1.42-1.42L12 10.59l6.36-6.36l1.41 1.41L13.41 12l6.36 6.36z"
+                  />
+                </svg>
               </div>
-              <button disabled={content.trim().length === 0}>Enviar</button>
-            </form>
-          </div>
-        </>
+            </div>
+          )}
+          <form className="bookCard-write-content" onSubmit={handleSubmit}>
+            <textarea
+              className="bookCard-write-textarea"
+              value={content}
+              onChange={(e) => {
+                if (e.target.value.length <= maxChars) {
+                  setContent(e.target.value);
+                }
+              }}
+              placeholder={
+                replyingTo ? "Escribe tu respuesta..." : "Escribe tu comentario"
+              }
+            />
+            <div>
+              {content.length} / {maxChars}
+            </div>
+            <button disabled={content.trim().length === 0}>Enviar</button>
+          </form>
+        </div>
       )}
+
       <div className="comments-section">
-        {comments.length === 0 ? (
+        {comments.length === 0 && !loading ? (
           <p>No hay comentarios aún.</p>
         ) : (
           comments.map((comment) => (
             <Comment
               key={comment.id}
+              id={comment.id}
               content={comment.content}
               userId={comment.user_id}
               createdAt={comment.created_at}
               isAuthenticated={isAuthenticated}
+              setReply={(userName) => handleSetReply(userName, comment.id)}
+              replyingTo={replyingTo}
+              setReplyingTo={setReplyingTo}
             />
           ))
         )}
