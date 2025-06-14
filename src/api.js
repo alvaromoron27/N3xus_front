@@ -2,8 +2,8 @@
 import axios from "axios";
 
 //URL base del backend
-//const baseURL = "https://n3xus.onrender.com/api";
-const baseURL = "http://localhost:3021/api";
+const baseURL = "https://n3xus.onrender.com/api";
+//const baseURL = "http://localhost:3021/api";
 
 const axiosInstance = axios.create({
   baseURL,
