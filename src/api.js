@@ -354,17 +354,18 @@ export const writeComment = async (commentData) => {
   }
 };
 
-// Función obtener los comentarios de un libro
-export const getComments = async (bookId) => {
+// Función obtener comentarios paginados de un libro
+export const getComments = async (bookId, limit = 5, offset = 0) => {
   try {
-    const response = await axiosInstance.get(`/get-comments/${bookId}`);
-    return response.data.comments; // devuelve el array de comentarios
+    const response = await axiosInstance.get(
+      `/get-comments/${bookId}?limit=${limit}&offset=${offset}`
+    );
+    return response.data;
   } catch (error) {
     console.error("Error al obtener comentarios:", error);
     throw error;
   }
 };
-
 
 // Función obtener un usuario por su id
 export const getUserById = async (userId) => {

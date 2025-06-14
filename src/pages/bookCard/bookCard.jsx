@@ -2,7 +2,7 @@ import "./bookCard.css";
 import { useSelector, useDispatch } from "react-redux";
 import Header from "../../components/global/header/header";
 import { formatDate } from "../../global/functions/globalFunctions";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
   saveBook,
   removeSavedBook,
@@ -21,7 +21,18 @@ import Comment from "../../components/commentSection/comment/comment.jsx";
 function BookCard() {
   const dispatch = useDispatch();
   const bookSelected = useSelector((state) => state.book.selectedBook);
+
   const [comments, setComments] = useState([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const COMMENTS_PER_PAGE = 5;
+
+  // refs para estados que necesitas leer dentro de funciones con closures
+  const loadingRef = useRef(loading);
+  const hasMoreRef = useRef(hasMore);
+  const pageRef = useRef(page);
+
   const userId = useSelector((state) => state.auth.user?.Id);
   const [pulsedSaveEbook, setPulsedSaveEbook] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -35,61 +46,90 @@ function BookCard() {
   const [content, setContent] = useState("");
   const maxChars = 1500;
 
-  const savedEbooksIds = savedEbooks.map((b) => b.id).join(",");
+  const savedEbooksIds = useMemo(
+    () => savedEbooks.map((b) => b.id).join(","),
+    [savedEbooks]
+  );
   const isSaved = savedEbooksIds.includes(bookSelected?.id);
 
-  const [isSticky, setIsSticky] = useState(false);
-  const markerRef = useRef(null);
+  // Actualiza refs cada vez que cambian los estados
+  useEffect(() => {
+    loadingRef.current = loading;
+  }, [loading]);
+  useEffect(() => {
+    hasMoreRef.current = hasMore;
+  }, [hasMore]);
+  useEffect(() => {
+    pageRef.current = page;
+  }, [page]);
+
+  const loadComments = useCallback(
+    async (pageToLoad) => {
+      if (loadingRef.current || !hasMoreRef.current) return;
+      setLoading(true);
+      try {
+        const { comments: newComments, hasMore: more } = await getComments(
+          bookSelected.id,
+          COMMENTS_PER_PAGE,
+          pageToLoad * COMMENTS_PER_PAGE
+        );
+
+        setComments((prev) => {
+          const prevIds = new Set(prev.map((c) => c.id));
+          const filteredNewComments = newComments.filter(
+            (c) => !prevIds.has(c.id)
+          );
+          return [...prev, ...filteredNewComments];
+        });
+
+        setHasMore(more);
+        setPage(pageToLoad + 1);
+      } catch (err) {
+        console.error("Error al cargar comentarios:", err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [bookSelected?.id]
+  );
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsSticky(!entry.isIntersecting);
-      },
-      {
-        root: null,
-        threshold: 0,
-        rootMargin: "0px 0px -100% 0px",
-      }
-    );
-
-    if (markerRef.current) {
-      observer.observe(markerRef.current);
+    if (bookSelected?.id) {
+      setComments([]);
+      setPage(0);
+      setHasMore(true);
+      loadComments(0);
+    } else {
+      setComments([]);
     }
+  }, [bookSelected?.id, loadComments]);
 
-    return () => {
-      if (markerRef.current) {
-        observer.unobserve(markerRef.current);
+  useEffect(() => {
+  if (!bookSelected?.id) {
+    setUploadedByUser(false);
+    setPulsedSaveEbook(false);
+    return;
+  }
+  setUploadedByUser(bookSelected.user_id === userId);
+  setPulsedSaveEbook(isSaved);
+}, [bookSelected?.id, bookSelected?.user_id, userId, isSaved]);
+
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
+
+      if (scrollTop + clientHeight >= scrollHeight - 100) {
+        loadComments(pageRef.current);
       }
     };
-  }, []);
 
-  useEffect(() => {
-    if (!bookSelected?.id) {
-      setComments([]);
-      setUploadedByUser(false);
-      setPulsedSaveEbook(false);
-      return;
-    }
-
-    setUploadedByUser(bookSelected.user_id === userId);
-    setPulsedSaveEbook(isSaved);
-
-    (async () => {
-      try {
-        const data = await getComments(bookSelected.id);
-        setComments(data);
-      } catch {
-        setComments([]);
-      }
-    })();
-  }, [
-    bookSelected?.id,
-    bookSelected?.user_id,
-    userId,
-    savedEbooksIds,
-    isSaved,
-  ]);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadComments]);
 
   const handleSaveEbook = async () => {
     if (!pulsedSaveEbook) {
@@ -304,12 +344,7 @@ function BookCard() {
       </div>
       {isAuthenticated && (
         <>
-          <div ref={markerRef} style={{ height: 1 }} />
-          <div
-            className={`bookCard-write-comment ${
-              isSticky ? "sticky-comment" : ""
-            }`}
-          >
+          <div className="bookCard-write-comment">
             <form
               className="bookCard-write-comment-content"
               onSubmit={handleSubmit}
@@ -343,11 +378,10 @@ function BookCard() {
               userId={comment.user_id}
               createdAt={comment.created_at}
               isAuthenticated={isAuthenticated}
-              // Puedes agregar más props si tu componente las recibe,
-              // por ejemplo nombre de usuario, avatar, etc.
             />
           ))
         )}
+        {loading && <p>Cargando más comentarios...</p>}
       </div>
     </div>
   );
