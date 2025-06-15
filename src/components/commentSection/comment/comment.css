@@ -67,17 +67,23 @@
   gap: 15px;
 }
 
-.comment-footer-like.like{
+.comment-footer-likeAndReply{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comment-footer-likeAndReply-iconLike.like{
   color: transparent;
   stroke: white;
 }
 
-.comment-footer-like.dislike{
+.comment-footer-likeAndReply-iconLike.dislike{
   color: rgb(190, 53, 43);
   stroke: rgb(190, 53, 43);
 }
 
-.comment-footer-like svg path{
+.comment-footer-likeAndReply-iconLike svg path{
   fill: currentColor;
   stroke: currentColor;
   stroke-width: 2px;

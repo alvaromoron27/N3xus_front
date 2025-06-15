@@ -2,8 +2,8 @@
 import axios from "axios";
 
 //URL base del backend
-const baseURL = "https://n3xus.onrender.com/api";
-//const baseURL = "http://localhost:3021/api";
+//const baseURL = "https://n3xus.onrender.com/api";
+const baseURL = "http://localhost:3021/api";
 
 const axiosInstance = axios.create({
   baseURL,
@@ -401,3 +401,17 @@ export const getReplies = async (commentId, limit = 5, offset = 0) => {
     throw error;
   }
 };
+
+export const getReplyCount = async (commentId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/get-replies?commentId=${commentId}&limit=0&offset=0`
+    );
+    return response.data.total; // solo usamos el total
+  } catch (error) {
+    console.error("Error al obtener el total de respuestas:", error);
+    throw error;
+  }
+};
+
+

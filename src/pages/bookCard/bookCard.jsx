@@ -46,6 +46,7 @@ function BookCard() {
 
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyUser, setReplyUser] = useState(null);
+  const [forceReloadReplies, setForceReloadReplies] = useState({});
 
   const [content, setContent] = useState("");
   const maxChars = 1500;
@@ -174,24 +175,16 @@ function BookCard() {
     try {
       if (replyingTo) {
         // Estoy escribiendo una respuesta (reply)
-        const { reply } = await writeReply({
+        await writeReply({
           content,
           userId,
           commentId: replyingTo,
         });
-        // Actualiza localmente las respuestas del comentario replyingTo
-        setComments((prevComments) =>
-          prevComments.map((comment) =>
-            comment.id === replyingTo
-              ? {
-                  ...comment,
-                  replies: comment.replies
-                    ? [reply, ...comment.replies]
-                    : [reply],
-                }
-              : comment
-          )
-        );
+        // Notificamos al comentario correspondiente que recargue sus replies
+      setForceReloadReplies((prev) => ({
+        ...prev,
+        [replyingTo]: Date.now(), // valor único para forzar un useEffect
+      }));
       } else {
         // Estoy escribiendo un comentario nuevo
         const { comment } = await writeComment({
@@ -443,6 +436,7 @@ function BookCard() {
               setReply={(userName) => handleSetReply(userName, comment.id)}
               replyingTo={replyingTo}
               setReplyingTo={setReplyingTo}
+              forceReloadReplies={forceReloadReplies[comment.id]}
             />
           ))
         )}
