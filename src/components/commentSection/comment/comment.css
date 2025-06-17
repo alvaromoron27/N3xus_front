@@ -73,6 +73,11 @@
   gap: 10px;
 }
 
+.comment-footer-likeAndReply-iconLike{
+  display: flex;
+  gap: 5px;
+}
+
 .comment-footer-likeAndReply-iconLike.like{
   color: transparent;
   stroke: white;

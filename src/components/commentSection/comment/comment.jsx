@@ -1,7 +1,14 @@
 import "./comment.css";
-import { getUserById, getReplies, getReplyCount } from "../../../api";
+import {
+  getUserById,
+  getReplies,
+  getReplyCount,
+  addLike,
+  getLikes,
+} from "../../../api";
 import { useEffect, useState } from "react";
 import { timeAgo } from "../../../utils/functions/timeAgo";
+import { useSelector } from "react-redux";
 
 const Comment = ({
   id,
@@ -12,8 +19,9 @@ const Comment = ({
   setReply,
   replyingTo,
   setReplyingTo,
-  forceReloadReplies
+  forceReloadReplies,
 }) => {
+  const user = useSelector((state) => state.auth.user.Id);
   const [userComment, setUserComment] = useState(null);
   const [replies, setReplies] = useState([]);
   const [totalReplies, setTotalReplies] = useState(0);
@@ -22,29 +30,41 @@ const Comment = ({
   const [loadingReplies, setLoadingReplies] = useState(false);
   const [repliesPage, setRepliesPage] = useState(0);
   const [hasMoreReplies, setHasMoreReplies] = useState(true);
+  const [likesComment, setLikesComment] = useState(0);
+  const [userLike, setUserLike] = useState(false);
   const REPLIES_PER_PAGE = 5;
 
   useEffect(() => {
-  if (forceReloadReplies) {
-    loadReplies(0);
-  }
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [forceReloadReplies]);
-
+    if (forceReloadReplies) {
+      loadReplies(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceReloadReplies]);
 
   useEffect(() => {
-  const fetchReplyCount = async () => {
-    try {
-      const total = await getReplyCount(id);
-      setTotalReplies(total);
-    } catch (error) {
-      console.error("Error obteniendo total de respuestas", error);
-    }
-  };
+    const fetchLikes = async () => {
+      const infoLikes = await getLikes(id);
+      setLikesComment(infoLikes.likeCount);
+      if(user === infoLikes.likes.user_id){
+        
+      }
+    };
 
-  fetchReplyCount();
-}, [id]);
+    fetchLikes();
+  }, [id]);
 
+  useEffect(() => {
+    const fetchReplyCount = async () => {
+      try {
+        const total = await getReplyCount(id);
+        setTotalReplies(total);
+      } catch (error) {
+        console.error("Error obteniendo total de respuestas", error);
+      }
+    };
+
+    fetchReplyCount();
+  }, [id]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -87,18 +107,18 @@ const Comment = ({
     if (loadingReplies || !hasMoreReplies) return;
     setLoadingReplies(true);
     try {
-      const { replies: newReplies, total, hasMore, } = await getReplies(
-        id,
-        REPLIES_PER_PAGE,
-        pageToLoad * REPLIES_PER_PAGE
-      );
+      const {
+        replies: newReplies,
+        total,
+        hasMore,
+      } = await getReplies(id, REPLIES_PER_PAGE, pageToLoad * REPLIES_PER_PAGE);
       setReplies((prev) => {
         const prevIds = new Set(prev.map((r) => r.id));
         const filtered = newReplies.filter((r) => !prevIds.has(r.id));
         return [...prev, ...filtered];
       });
       setTotalReplies(total);
-      
+
       const userMap = {};
       await Promise.all(
         newReplies.map(async (reply) => {
@@ -120,6 +140,12 @@ const Comment = ({
     }
   };
 
+  const handleLikeCommentClick = async () => {
+    const resultLikes = await addLike({ userId: user, commentId: id });
+    console.log(resultLikes);
+    setLikesComment(resultLikes);
+  };
+
   return (
     <div className="comment">
       {userComment ? (
@@ -136,59 +162,59 @@ const Comment = ({
           <div className="comment-footer">
             <div className="comment-footer-options">
               <small>{timeAgo(createdAt)}</small>
-              {totalReplies > 0 ? 
+              {totalReplies > 0 ? (
                 <div
-                className="comment-footer-replies"
-                style={{ cursor: "pointer" }}
-                onClick={handleToggleReplies}
-              >
-                {loadingReplies ? (
-                  "Cargando respuestas..."
-                ) : showReplies ? (
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    Ocultar respuestas
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
+                  className="comment-footer-replies"
+                  style={{ cursor: "pointer" }}
+                  onClick={handleToggleReplies}
+                >
+                  {loadingReplies ? (
+                    "Cargando respuestas..."
+                  ) : showReplies ? (
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
                     >
-                      <path
-                        fill="#ffffff"
-                        d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z"
-                      />
-                    </svg>
-                  </span>
-                ) : (
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    Ver respuestas • {totalReplies}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
+                      Ocultar respuestas
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="#ffffff"
+                          d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6l-6 6z"
+                        />
+                      </svg>
+                    </span>
+                  ) : (
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
                     >
-                      <path
-                        fill="#ffffff"
-                        d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"
-                      />
-                    </svg>
-                  </span>
-                )}
-              </div>
-              : null}
+                      Ver respuestas • {totalReplies}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill="#ffffff"
+                          d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"
+                        />
+                      </svg>
+                    </span>
+                  )}
+                </div>
+              ) : null}
             </div>
             <div className="comment-footer-likeAndReply" onClick={toggleReply}>
               {isAuthenticated && (
@@ -204,21 +230,43 @@ const Comment = ({
                   />
                 </svg>
               )}
-              <div className="comment-footer-likeAndReply-iconLike">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 48 48"
-                >
-                  <path
-                    fill="none"
-                    stroke="#e11d48"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.63 7.15a10.12 10.12 0 0 0-7.86 16.51h0L24 42.71l16.07-18.86l.08-.09l.08-.1h0A10.13 10.13 0 1 0 24 11.58a10.1 10.1 0 0 0-8.36-4.43Z"
-                  />
-                </svg>
+              <div
+                className="comment-footer-likeAndReply-iconLike"
+                onClick={() => handleLikeCommentClick()}
+              >
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 48 48"
+                  >
+                    <path
+                      fill="none"
+                      stroke="#e11d48"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.63 7.15a10.12 10.12 0 0 0-7.86 16.51h0L24 42.71l16.07-18.86l.08-.09l.08-.1h0A10.13 10.13 0 1 0 24 11.58a10.1 10.1 0 0 0-8.36-4.43Z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 48 48"
+                  >
+                    <path
+                      fill="none"
+                      stroke="#e11d48"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.63 7.15a10.12 10.12 0 0 0-7.86 16.51h0L24 42.71l16.07-18.86l.08-.09l.08-.1h0A10.13 10.13 0 1 0 24 11.58a10.1 10.1 0 0 0-8.36-4.43Z"
+                    />
+                  </svg>
+                </div>
+                <div>{likesComment > 0 ? likesComment : null}</div>
               </div>
             </div>
           </div>

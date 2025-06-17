@@ -414,4 +414,23 @@ export const getReplyCount = async (commentId) => {
   }
 };
 
+// Función para agregar un me gusta a comentario
+export const addLike = async (likeData) => {
+  try {
+    const response = await axiosInstance.post("/add-likeComment", likeData);
+    return response.data;
+  } catch (error) {
+    console.error("Error al añadir like:", error);
+    throw error;
+  }
+};
 
+export const getLikes = async (commentId) => {
+  try {
+    const response = await axiosInstance.get(`/likes-comment/${commentId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener número de likes:", error);
+    return 0;
+  }
+};
