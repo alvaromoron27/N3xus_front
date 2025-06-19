@@ -425,12 +425,31 @@ export const addLike = async (likeData) => {
   }
 };
 
-export const getLikes = async (commentId) => {
+// Función para eliminar un me gusta de un comentario
+export const removeLike = async (likeData) => {
   try {
-    const response = await axiosInstance.get(`/likes-comment/${commentId}`);
+    const response = await axiosInstance.delete("/remove-likeComment", {
+      data: likeData, // axios permite enviar body en DELETE usando esta sintaxis
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al eliminar like:", error);
+    throw error;
+  }
+};
+
+export const getLikes = async (commentId, userId) => {
+  try {
+    const url = userId
+      ? `/likes-comment/${commentId}?userId=${userId}`
+      : `/likes-comment/${commentId}`;
+
+    const response = await axiosInstance.get(url);
     return response.data;
   } catch (error) {
     console.error("Error al obtener número de likes:", error);
-    return 0;
+    return { likeCount: 0, likedByUser: false };
   }
 };
+
+

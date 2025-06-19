@@ -5,10 +5,12 @@ import {
   getReplyCount,
   addLike,
   getLikes,
+  removeLike,
 } from "../../../api";
 import { useEffect, useState } from "react";
 import { timeAgo } from "../../../utils/functions/timeAgo";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Comment = ({
   id,
@@ -21,7 +23,7 @@ const Comment = ({
   setReplyingTo,
   forceReloadReplies,
 }) => {
-  const user = useSelector((state) => state.auth.user.Id);
+  const user = useSelector((state) => state?.auth?.user?.Id);
   const [userComment, setUserComment] = useState(null);
   const [replies, setReplies] = useState([]);
   const [totalReplies, setTotalReplies] = useState(0);
@@ -34,6 +36,8 @@ const Comment = ({
   const [userLike, setUserLike] = useState(false);
   const REPLIES_PER_PAGE = 5;
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (forceReloadReplies) {
       loadReplies(0);
@@ -42,16 +46,22 @@ const Comment = ({
   }, [forceReloadReplies]);
 
   useEffect(() => {
-    const fetchLikes = async () => {
-      const infoLikes = await getLikes(id);
-      setLikesComment(infoLikes.likeCount);
-      if(user === infoLikes.likes.user_id){
-        
-      }
-    };
+  const fetchLikes = async () => {
+    try {
+      const infoLikes = user
+        ? await getLikes(id, user)
+        : await getLikes(id);
 
-    fetchLikes();
-  }, [id]);
+      setLikesComment(infoLikes.likeCount);
+      setUserLike(!!infoLikes.likedByUser);  // convierte a booleano
+    } catch (error) {
+      console.error("Error al obtener likes del comentario:", error);
+    }
+  };
+
+  fetchLikes();
+}, [id, user]);
+
 
   useEffect(() => {
     const fetchReplyCount = async () => {
@@ -141,10 +151,28 @@ const Comment = ({
   };
 
   const handleLikeCommentClick = async () => {
-    const resultLikes = await addLike({ userId: user, commentId: id });
-    console.log(resultLikes);
-    setLikesComment(resultLikes);
-  };
+  if (!user) {
+    // Usuario no autenticado → redirigir a login
+    navigate("/login");
+    return;
+  }
+
+  try {
+    if (!userLike) {
+      // El usuario aún no ha dado like → agregar like
+      const resultLikes = await addLike({ userId: user, commentId: id });
+      setLikesComment(resultLikes.numberLikes);
+      setUserLike(true);
+    } else {
+      // El usuario ya dio like → eliminar like
+      const resultLikes = await removeLike({ userId: user, commentId: id });
+      setLikesComment(resultLikes.numberLikes);
+      setUserLike(false);
+    }
+  } catch (error) {
+    console.error("Error al alternar el like:", error);
+  }
+};
 
   return (
     <div className="comment">
@@ -216,9 +244,10 @@ const Comment = ({
                 </div>
               ) : null}
             </div>
-            <div className="comment-footer-likeAndReply" onClick={toggleReply}>
+            <div className="comment-footer-likeAndReply">
               {isAuthenticated && (
-                <svg
+                <div  onClick={toggleReply}>
+                  <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
                   height="20"
@@ -229,43 +258,51 @@ const Comment = ({
                     d="M12 19h-2v-2H8v-2H6v-2H4v-2h2V9h2V7h2V5h2v4h8v6h-8z"
                   />
                 </svg>
+                </ div>
               )}
-              <div
-                className="comment-footer-likeAndReply-iconLike"
-                onClick={() => handleLikeCommentClick()}
-              >
-                <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 48 48"
-                  >
-                    <path
-                      fill="none"
-                      stroke="#e11d48"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15.63 7.15a10.12 10.12 0 0 0-7.86 16.51h0L24 42.71l16.07-18.86l.08-.09l.08-.1h0A10.13 10.13 0 1 0 24 11.58a10.1 10.1 0 0 0-8.36-4.43Z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 48 48"
-                  >
-                    <path
-                      fill="none"
-                      stroke="#e11d48"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15.63 7.15a10.12 10.12 0 0 0-7.86 16.51h0L24 42.71l16.07-18.86l.08-.09l.08-.1h0A10.13 10.13 0 1 0 24 11.58a10.1 10.1 0 0 0-8.36-4.43Z"
-                    />
-                  </svg>
-                </div>
+              <div className="comment-footer-likeAndReply-iconLike">
+                {!userLike ? (
+                  <div onClick={() => handleLikeCommentClick()}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 48 48"
+                    >
+                      <defs>
+                        <mask id="IconifyId197875687cfcdf2ad1">
+                          <path
+                            fill="#555"
+                            stroke="#fff"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="4"
+                            d="M15 8C8.925 8 4 12.925 4 19c0 11 13 21 20 23.326C31 40 44 30 44 19c0-6.075-4.925-11-11-11c-3.72 0-7.01 1.847-9 4.674A10.99 10.99 0 0 0 15 8"
+                          />
+                        </mask>
+                      </defs>
+                      <path
+                        fill="#ffffff"
+                        d="M0 0h48v48H0z"
+                        mask="url(#IconifyId197875687cfcdf2ad1)"
+                      />
+                    </svg>
+                  </div>
+                ) : (
+                  <div onClick={() => handleLikeCommentClick()}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 48 48"
+                    >
+                      <path
+                        fill="#F44336"
+                        d="M34 9c-4.2 0-7.9 2.1-10 5.4C21.9 11.1 18.2 9 14 9C7.4 9 2 14.4 2 21c0 11.9 22 24 22 24s22-12 22-24c0-6.6-5.4-12-12-12"
+                      />
+                    </svg>
+                  </div>
+                )}
                 <div>{likesComment > 0 ? likesComment : null}</div>
               </div>
             </div>

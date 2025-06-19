@@ -77,23 +77,6 @@
   display: flex;
   gap: 5px;
 }
-
-.comment-footer-likeAndReply-iconLike.like{
-  color: transparent;
-  stroke: white;
-}
-
-.comment-footer-likeAndReply-iconLike.dislike{
-  color: rgb(190, 53, 43);
-  stroke: rgb(190, 53, 43);
-}
-
-.comment-footer-likeAndReply-iconLike svg path{
-  fill: currentColor;
-  stroke: currentColor;
-  stroke-width: 2px;
-}
-
 .comment-footer small{
   color: rgb(172, 172, 172);
 }
