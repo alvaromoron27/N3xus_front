@@ -29,7 +29,7 @@ function ConfirmAccount() {
 
     // Redirigir a login después de 10 segundos
     const timer = setTimeout(() => {
-      navigate("/login"); // Cambia '/login' si tu ruta de login es diferente
+      navigate("/login");
     }, 10000);
 
     return () => clearTimeout(timer); // Limpiar el temporizador al desmontar el componente

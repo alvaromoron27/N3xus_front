@@ -18,12 +18,14 @@ import { addCommentToSelectedBook } from "../../redux/reducers/bookReducer.js";
 import ModalDeleteBook from "../../components/modals/modalDeleteBook/modalDeleteBook";
 import ModalAddBook from "../../components/modals/modalAddBook/modalAddBook";
 import Comment from "../../components/commentSection/comment/comment.jsx";
+import modalDeleteComment from "../../components/modals/modalDeleteComment/modalDeleteComment.jsx"
 
 function BookCard() {
   const dispatch = useDispatch();
   const bookSelected = useSelector((state) => state.book.selectedBook);
 
   const [comments, setComments] = useState([]);
+  const [commentSelected, setCommentSelected] = useState(null);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -43,6 +45,7 @@ function BookCard() {
   const [uploadedByUser, setUploadedByUser] = useState(false);
   const [modalEditBookOpen, setModalEditBookOpen] = useState(false);
   const [modalDeleteBookOpen, setModalDeleteBookOpen] = useState(false);
+  const [modalDeleteCommentOpen, setModalDeleteCommentOpen] = useState(false);
 
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyUser, setReplyUser] = useState(null);
@@ -165,6 +168,10 @@ function BookCard() {
     setModalDeleteBookOpen(!modalDeleteBookOpen);
   }
 
+  function handleDeleteCommentClick() {
+    setModalDeleteCommentOpen(!modalDeleteBookOpen);
+  }
+
   function handleEditBookClick() {
     setModalEditBookOpen(!modalEditBookOpen);
   }
@@ -215,6 +222,15 @@ function BookCard() {
       setReplyUser(userName);
     }
   }
+
+  const handleCommentDeleted = (deletedId) => {
+  setComments(prev => prev.filter(comment => comment.id !== deletedId));
+};
+
+const handleDeleteComment = (CommentId) => {
+  setModalDeleteCommentOpen(!modalDeleteBookOpen);
+  setCommentSelected(CommentId);
+};
 
   return (
     <div className="container-EbookCard">
@@ -373,6 +389,13 @@ function BookCard() {
               onClose={handleDeleteBookClick}
             />
           )}
+          {modalDeleteCommentOpen && (
+            <modalDeleteComment
+              Id={commentSelected}
+              onDelete={handleCommentDeleted}
+              onClose={handleDeleteCommentClick}
+            />
+          )}
         </div>
       </div>
       {isAuthenticated && (
@@ -437,6 +460,7 @@ function BookCard() {
               replyingTo={replyingTo}
               setReplyingTo={setReplyingTo}
               forceReloadReplies={forceReloadReplies[comment.id]}
+              onDeleteComment={handleDeleteComment}
             />
           ))
         )}

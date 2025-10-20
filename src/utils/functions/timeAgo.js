@@ -3,11 +3,9 @@ export function timeAgo(dateString) {
   const past = new Date(dateString);
   const diffInSeconds = Math.floor((now - past) / 1000);
 
-  if (diffInSeconds < 60) return `${diffInSeconds}s`;
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`;
-  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`;
-  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d`;
-  if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 604800)}w`;
-  if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)}mo`;
-  return `${Math.floor(diffInSeconds / 31536000)}y`;
+  if (diffInSeconds < 60) return `${diffInSeconds} segundos`;
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutos`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} horas`;
+  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} días`;
+  else return `${Math.floor(diffInSeconds / 604800)} semanas`;
 }

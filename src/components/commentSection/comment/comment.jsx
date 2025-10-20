@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import { timeAgo } from "../../../utils/functions/timeAgo";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import fotoPerfilDefault from "../../../assets/foto_perfil_default.png";
+import Reply from "../reply/reply";
 
 const Comment = ({
   id,
@@ -22,6 +24,7 @@ const Comment = ({
   replyingTo,
   setReplyingTo,
   forceReloadReplies,
+  onDeleteComment,
 }) => {
   const user = useSelector((state) => state?.auth?.user?.Id);
   const [userComment, setUserComment] = useState(null);
@@ -33,9 +36,11 @@ const Comment = ({
   const [repliesPage, setRepliesPage] = useState(0);
   const [hasMoreReplies, setHasMoreReplies] = useState(true);
   const [likesComment, setLikesComment] = useState(0);
-  const [userLike, setUserLike] = useState(false);
-  const REPLIES_PER_PAGE = 5;
+  const [userLikeComment, setUserLikeComment] = useState(false);
+  const [userLikeReply, setUserLikeReply] = useState(false);
+  const [userAuthor, setUserAuthor] = useState(false);
 
+  const REPLIES_PER_PAGE = 5;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,22 +51,19 @@ const Comment = ({
   }, [forceReloadReplies]);
 
   useEffect(() => {
-  const fetchLikes = async () => {
-    try {
-      const infoLikes = user
-        ? await getLikes(id, user)
-        : await getLikes(id);
+    const fetchLikes = async () => {
+      try {
+        const infoLikes = user ? await getLikes(id, user) : await getLikes(id);
 
-      setLikesComment(infoLikes.likeCount);
-      setUserLike(!!infoLikes.likedByUser);  // convierte a booleano
-    } catch (error) {
-      console.error("Error al obtener likes del comentario:", error);
-    }
-  };
+        setLikesComment(infoLikes.likeCount);
+        setUserLikeComment(!!infoLikes.likedByUser); // convierte a booleano
+      } catch (error) {
+        console.error("Error al obtener likes del comentario:", error);
+      }
+    };
 
-  fetchLikes();
-}, [id, user]);
-
+    fetchLikes();
+  }, [id, user]);
 
   useEffect(() => {
     const fetchReplyCount = async () => {
@@ -77,6 +79,9 @@ const Comment = ({
   }, [id]);
 
   useEffect(() => {
+    if (userId === user) {
+      setUserAuthor(true);
+    }
     const fetchUser = async () => {
       try {
         const userData = await getUserById(userId);
@@ -87,7 +92,7 @@ const Comment = ({
     };
 
     if (userId) fetchUser();
-  }, [userId]);
+  }, [user, userId]);
 
   const isReplying = replyingTo === id;
 
@@ -151,28 +156,52 @@ const Comment = ({
   };
 
   const handleLikeCommentClick = async () => {
-  if (!user) {
-    // Usuario no autenticado → redirigir a login
-    navigate("/login");
-    return;
-  }
-
-  try {
-    if (!userLike) {
-      // El usuario aún no ha dado like → agregar like
-      const resultLikes = await addLike({ userId: user, commentId: id });
-      setLikesComment(resultLikes.numberLikes);
-      setUserLike(true);
-    } else {
-      // El usuario ya dio like → eliminar like
-      const resultLikes = await removeLike({ userId: user, commentId: id });
-      setLikesComment(resultLikes.numberLikes);
-      setUserLike(false);
+    if (!user) {
+      // Usuario no autenticado → redirigir a login
+      navigate("/login");
+      return;
     }
-  } catch (error) {
-    console.error("Error al alternar el like:", error);
-  }
-};
+
+    try {
+      if (!userLikeComment) {
+        // El usuario aún no ha dado like → agregar like
+        const resultLikes = await addLike({ userId: user, commentId: id });
+        setLikesComment(resultLikes.numberLikes);
+        setUserLikeComment(true);
+      } else {
+        // El usuario ya dio like → eliminar like
+        const resultLikes = await removeLike({ userId: user, commentId: id });
+        setLikesComment(resultLikes.numberLikes);
+        setUserLikeComment(false);
+      }
+    } catch (error) {
+      console.error("Error al alternar el like:", error);
+    }
+  };
+
+  const handleLikeReplyClick = async () => {
+    if (!user) {
+      // Usuario no autenticado → redirigir a login
+      navigate("/login");
+      return;
+    }
+
+    try {
+      if (!userLikeReply) {
+        // El usuario aún no ha dado like → agregar like
+        const resultLikes = await addLike({ userId: user, commentId: id });
+        setLikesComment(resultLikes.numberLikes);
+        setUserLikeReply(true);
+      } else {
+        // El usuario ya dio like → eliminar like
+        const resultLikes = await removeLike({ userId: user, commentId: id });
+        setLikesComment(resultLikes.numberLikes);
+        setUserLikeReply(false);
+      }
+    } catch (error) {
+      console.error("Error al alternar el like:", error);
+    }
+  };
 
   return (
     <div className="comment">
@@ -180,7 +209,11 @@ const Comment = ({
         <>
           <div className="comment-user">
             <img
-              src={userComment.avatar_url}
+              src={
+                userComment.avatar_url
+                  ? userComment.avatar_url
+                  : fotoPerfilDefault
+              }
               alt=""
               className="comment-image"
             />
@@ -246,23 +279,26 @@ const Comment = ({
             </div>
             <div className="comment-footer-likeAndReply">
               {isAuthenticated && (
-                <div  onClick={toggleReply}>
+                <div onClick={toggleReply} title="Responder">
                   <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="#ffffff"
-                    d="M12 19h-2v-2H8v-2H6v-2H4v-2h2V9h2V7h2V5h2v4h8v6h-8z"
-                  />
-                </svg>
-                </ div>
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="#ffffff"
+                      d="M12 19h-2v-2H8v-2H6v-2H4v-2h2V9h2V7h2V5h2v4h8v6h-8z"
+                    />
+                  </svg>
+                </div>
               )}
               <div className="comment-footer-likeAndReply-iconLike">
-                {!userLike ? (
-                  <div onClick={() => handleLikeCommentClick()}>
+                {!userLikeComment ? (
+                  <div
+                    onClick={() => handleLikeCommentClick()}
+                    title="Me gusta"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -289,7 +325,10 @@ const Comment = ({
                     </svg>
                   </div>
                 ) : (
-                  <div onClick={() => handleLikeCommentClick()}>
+                  <div
+                    onClick={() => handleLikeCommentClick()}
+                    title="Ya no me gusta"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -305,32 +344,36 @@ const Comment = ({
                 )}
                 <div>{likesComment > 0 ? likesComment : null}</div>
               </div>
+              {userAuthor && (
+                <div onClick={onDeleteComment(id)} title="Eliminar">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="#ffffff"
+                      d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"
+                    />
+                  </svg>
+                </div>
+              )}
             </div>
           </div>
           {showReplies && replies.length > 0 && (
             <div className="comment-replies">
-              {replies.map((reply) => {
-                const user = replyUsers[reply.id];
-                return (
-                  <div key={reply.id} className="reply">
-                    {user ? (
-                      <>
-                        <div className="reply-user">
-                          <img
-                            src={user.avatar_url}
-                            alt="avatar"
-                            className="reply-avatar"
-                          />
-                          <strong>{user.usuario}</strong>
-                        </div>
-                        <p>{reply.content}</p>
-                      </>
-                    ) : (
-                      <p>{reply.content}</p> // fallback si el usuario no se cargó
-                    )}
-                  </div>
-                );
-              })}
+              {replies.map((reply) => (
+                <Reply
+                  key={reply.id}
+                  reply={reply}
+                  userData={replyUsers[reply.id]}
+                  onLoadUser={(id, user) =>
+                    setReplyUsers((prev) => ({ ...prev, [id]: user }))
+                  }
+                />
+              ))}
+
               <div className="comment-replies-button">
                 {hasMoreReplies && !loadingReplies && (
                   <button

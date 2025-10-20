@@ -2,8 +2,8 @@
 import axios from "axios";
 
 //URL base del backend
-const baseURL = "https://n3xus.onrender.com/api";
-//const baseURL = "http://localhost:3021/api";
+//const baseURL = "https://n3xus.onrender.com/api";
+const baseURL = "http://localhost:3021/api";
 
 const axiosInstance = axios.create({
   baseURL,
@@ -350,6 +350,19 @@ export const writeComment = async (commentData) => {
     return response.data;
   } catch (error) {
     console.error("Error al publicar el comentario:", error);
+    throw error;
+  }
+};
+
+// Función para eliminar un comentario
+export const deleteComment = async (idComment) => {
+  try {
+    const response = await axiosInstance.delete("/delete-comment", {
+      data: { idComment }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al eliminar el comentario:", error);
     throw error;
   }
 };
