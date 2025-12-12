@@ -1,0 +1,50 @@
+.modal-contentDeleteReply {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90vw;
+    color: white;
+    background-color: #101010;
+    border: 1px solid #191919;
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+    width: 800px;
+    max-height: 80vh;
+    gap: 15px;
+    overflow-y: auto;
+}
+
+.modalDeleteReply-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.modalDeleteReply-buttons button {
+    height: 40px;
+    width: 100px;
+    border-radius: 10px;
+}
+
+.modalDeleteReply-delete {
+    background-color: red;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+    font-family: 'regular';
+    letter-spacing: 0.5px;
+}
+
+.modalDeleteReply-cancel {
+    background-color: white;
+    transition: all 0.2s ease-in-out;
+    font-family: 'regular';
+    letter-spacing: 0.5px;
+}
+
+.modalDeleteReply-delete:hover {
+    box-shadow: 1px 1px 8px red;
+}
+
+.modalDeleteReply-cancel:hover {
+    box-shadow: 1px 1px 8px rgb(126, 126, 126);
+}

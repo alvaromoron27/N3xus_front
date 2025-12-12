@@ -25,6 +25,9 @@ const bookSlice = createSlice({
         state.selectedBook.comments = [action.payload];
       }
     },
+    addReplyToComment: (state, action) => {
+      state.selectedBook = action.payload;
+    },
   },
 });
 
@@ -33,6 +36,7 @@ export const {
   clearStateEbookSelected,
   editBookReducer,
   addCommentToSelectedBook,
+  addReplyToComment,
 } = bookSlice.actions;
 
 export default bookSlice.reducer;

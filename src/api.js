@@ -402,6 +402,19 @@ export const writeReply = async (replyData) => {
   }
 };
 
+// Función para eliminar una respuesta
+export const deleteReply = async (idReply) => {
+  try {
+    const response = await axiosInstance.delete("/delete-reply", {
+      data: { idReply }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al eliminar la respuesta:", error);
+    throw error;
+  }
+};
+
 // Función para obtener respuestas paginadas de un comentario
 export const getReplies = async (commentId, limit = 5, offset = 0) => {
   try {
@@ -428,7 +441,7 @@ export const getReplyCount = async (commentId) => {
 };
 
 // Función para agregar un me gusta a comentario
-export const addLike = async (likeData) => {
+export const addLikeComment = async (likeData) => {
   try {
     const response = await axiosInstance.post("/add-likeComment", likeData);
     return response.data;
@@ -439,7 +452,7 @@ export const addLike = async (likeData) => {
 };
 
 // Función para eliminar un me gusta de un comentario
-export const removeLike = async (likeData) => {
+export const removeLikeComment = async (likeData) => {
   try {
     const response = await axiosInstance.delete("/remove-likeComment", {
       data: likeData, // axios permite enviar body en DELETE usando esta sintaxis
@@ -451,7 +464,8 @@ export const removeLike = async (likeData) => {
   }
 };
 
-export const getLikes = async (commentId, userId) => {
+// Función para obtener número de likes de un comentario y si el user logueado le dió like a un comentario
+export const getCommentLikes = async (commentId, userId) => {
   try {
     const url = userId
       ? `/likes-comment/${commentId}?userId=${userId}`
@@ -465,4 +479,41 @@ export const getLikes = async (commentId, userId) => {
   }
 };
 
+// Función para agregar un me gusta a una respuesta
+export const addLikeReply = async (likeData) => {
+  try {
+    const response = await axiosInstance.post("/add-likeReply", likeData);
+    return response.data;
+  } catch (error) {
+    console.error("Error al añadir like:", error);
+    throw error;
+  }
+};
 
+// Función para eliminar un me gusta de una respuesta
+export const removeLikeReply = async (likeData) => {
+  try {
+    const response = await axiosInstance.delete("/remove-likeReply", {
+      data: likeData,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al eliminar like:", error);
+    throw error;
+  }
+};
+
+// Función para obtener número de likes de una respuesta y si el user logueado le dió like a una respuesta
+export const getReplyLikes = async (replyId, userId) => {
+  try {
+    const url = userId
+      ? `/likes-reply/${replyId}?userId=${userId}`
+      : `/likes-reply/${replyId}`;
+
+    const response = await axiosInstance.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener número de likes:", error);
+    return { likeCount: 0, likedByUser: false };
+  }
+};

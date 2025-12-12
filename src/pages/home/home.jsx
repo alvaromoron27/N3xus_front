@@ -14,7 +14,7 @@ function Home() {
   const [filteredEbooks, setFilteredEbooks] = useState([]);
   const [tagSelected, setTagSelected] = useState("Novedades");
   const [selectedCategory, setSelectedCategory] = useState("Categorías");
-  const dataUser = useSelector((state) => state.auth);
+  const data = useSelector((state) => state);
   const [showModalAddEbook, setShowModalAddEbook] = useState(false);
 
   // Obtener todos los ebooks al montar el componente
@@ -31,8 +31,8 @@ function Home() {
     fetchAllEbooks();
 
     //DATOS DEL USUARIO
-    console.log(dataUser);
-  }, [dataUser]);
+    console.log(data);
+  }, [data]);
 
   // Actualiza los ebooks filtrados cuando cambia el tagSelected o selectedCategory
   useEffect(() => {
@@ -186,7 +186,7 @@ function Home() {
             Todos
           </div>
         </div>
-        {dataUser.isAuthenticated ? (
+        {data.auth.isAuthenticated ? (
           <button
             className="home-option-addEbook"
             onClick={() => setShowModalAddEbook(true)}

@@ -77,6 +77,7 @@
   display: flex;
   gap: 5px;
 }
+
 .comment-footer small{
   color: rgb(172, 172, 172);
 }
@@ -94,34 +95,4 @@
 
 .comment-footer button:hover {
   box-shadow: 1px 1px 6px gray;
-}
-
-.reply {
-  border: 1px solid rgba(255, 255, 255, 0.37);
-  margin-left: 30px;
-  border-radius: 6px;
-  margin-top: 10px;
-  background-color: rgb(24, 24, 24);
-  padding: 7px;
-}
-
-.reply p{
-  margin: 10px;
-  margin-bottom: 3px;
-}
-
-.reply-user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.reply-user img {
-  width: 30px;
-  height: 30px;
-  border-radius: 100%;
-}
-
-.reply-user strong{
-  letter-spacing: 0.5px;
 }

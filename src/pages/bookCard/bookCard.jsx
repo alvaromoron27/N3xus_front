@@ -1,5 +1,5 @@
 import "./bookCard.css";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import Header from "../../components/global/header/header";
 import { formatDate } from "../../global/functions/globalFunctions";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
@@ -18,42 +18,47 @@ import { addCommentToSelectedBook } from "../../redux/reducers/bookReducer.js";
 import ModalDeleteBook from "../../components/modals/modalDeleteBook/modalDeleteBook";
 import ModalAddBook from "../../components/modals/modalAddBook/modalAddBook";
 import Comment from "../../components/commentSection/comment/comment.jsx";
-import modalDeleteComment from "../../components/modals/modalDeleteComment/modalDeleteComment.jsx"
+import ModalDeleteComment from "../../components/modals/modalDeleteComment/modalDeleteComment.jsx";
+import ModalDeleteReply from "../../components/modals/modalDeleteReply/modalDeleteReply.jsx";
 
 function BookCard() {
   const dispatch = useDispatch();
-  const bookSelected = useSelector((state) => state.book.selectedBook);
-
+  const bookSelected = useSelector(
+    (state) => state.book.selectedBook,
+    shallowEqual
+  );
   const [comments, setComments] = useState([]);
   const [commentSelected, setCommentSelected] = useState(null);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const COMMENTS_PER_PAGE = 5;
-
-  // refs para estados que necesitas leer dentro de funciones con closures
   const loadingRef = useRef(loading);
   const hasMoreRef = useRef(hasMore);
   const pageRef = useRef(page);
-
+  const replyCallbacks = useRef({});
+  const deleteReplyCallbacks = useRef({});
   const userId = useSelector((state) => state.auth.user?.Id);
   const [pulsedSaveEbook, setPulsedSaveEbook] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const savedEbooks = useSelector(
-    (state) => state.auth.user?.LibrosGuardados || []
+  const savedEbooksFromRedux = useSelector(
+    (state) => state.auth.user?.LibrosGuardados
+  );
+
+  const savedEbooks = useMemo(
+    () => savedEbooksFromRedux || [],
+    [savedEbooksFromRedux]
   );
   const [uploadedByUser, setUploadedByUser] = useState(false);
   const [modalEditBookOpen, setModalEditBookOpen] = useState(false);
   const [modalDeleteBookOpen, setModalDeleteBookOpen] = useState(false);
   const [modalDeleteCommentOpen, setModalDeleteCommentOpen] = useState(false);
-
+  const [modalDeleteReplyOpen, setModalDeleteReplyOpen] = useState(false);
+  const [replySelected, setReplySelected] = useState(null);
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyUser, setReplyUser] = useState(null);
-  const [forceReloadReplies, setForceReloadReplies] = useState({});
-
   const [content, setContent] = useState("");
   const maxChars = 1500;
-
   const savedEbooksIds = useMemo(
     () => savedEbooks.map((b) => b.id).join(","),
     [savedEbooks]
@@ -70,6 +75,14 @@ function BookCard() {
   useEffect(() => {
     pageRef.current = page;
   }, [page]);
+
+  function registerReplyCallback(commentId, fn) {
+    replyCallbacks.current[commentId] = fn;
+  };
+
+  function registerDeleteReplyCallback(commentId, fn) {
+  deleteReplyCallbacks.current[commentId] = fn;
+}
 
   const loadComments = useCallback(
     async (pageToLoad) => {
@@ -100,6 +113,31 @@ function BookCard() {
     },
     [bookSelected?.id]
   );
+
+  useEffect(() => {
+    if (
+      modalEditBookOpen ||
+      modalDeleteBookOpen ||
+      modalDeleteCommentOpen ||
+      modalDeleteReplyOpen
+    ) {
+      document.body.classList.add("no-scroll");
+      document.documentElement.classList.add("no-scroll"); // aplica al html
+    } else {
+      document.body.classList.remove("no-scroll");
+      document.documentElement.classList.remove("no-scroll");
+    }
+
+    return () => {
+      document.body.classList.remove("no-scroll");
+      document.documentElement.classList.remove("no-scroll");
+    };
+  }, [
+    modalDeleteBookOpen,
+    modalDeleteCommentOpen,
+    modalEditBookOpen,
+    modalDeleteReplyOpen,
+  ]);
 
   useEffect(() => {
     if (bookSelected?.id) {
@@ -169,11 +207,15 @@ function BookCard() {
   }
 
   function handleDeleteCommentClick() {
-    setModalDeleteCommentOpen(!modalDeleteBookOpen);
+    setModalDeleteCommentOpen(!modalDeleteCommentOpen);
+  }
+
+  function handleDeleteReplyClick() {
+    setModalDeleteReplyOpen(!modalDeleteReplyOpen);
   }
 
   function handleEditBookClick() {
-    setModalEditBookOpen(!modalEditBookOpen);
+    setModalEditBookOpen((prev) => !prev);
   }
 
   const handleSubmit = async (e) => {
@@ -181,25 +223,26 @@ function BookCard() {
 
     try {
       if (replyingTo) {
-        // Estoy escribiendo una respuesta (reply)
-        await writeReply({
+        // Escribir una respuesta
+        const { reply } = await writeReply({
           content,
           userId,
           commentId: replyingTo,
         });
-        // Notificamos al comentario correspondiente que recargue sus replies
-      setForceReloadReplies((prev) => ({
-        ...prev,
-        [replyingTo]: Date.now(), // valor único para forzar un useEffect
-      }));
+        const cb = replyCallbacks.current[replyingTo];
+        if (cb) cb(reply);
+
+        setContent("");
+        setReplyingTo(null);
+        setReplyUser(null);
       } else {
-        // Estoy escribiendo un comentario nuevo
+        // Escribir comentario nuevo
         const { comment } = await writeComment({
           content,
           userId,
           bookId: bookSelected.id,
         });
-        // Actualiza Redux (como ya haces)
+        // Actualiza Redux
         dispatch(addCommentToSelectedBook(comment));
         // Actualiza local para render inmediato
         setComments((prev) => [comment, ...prev]);
@@ -208,6 +251,7 @@ function BookCard() {
       // Limpia el formulario y estados de respuesta
       setContent("");
       setReplyingTo(null);
+      setReplyUser(null);
     } catch (err) {
       console.error(err);
     }
@@ -224,13 +268,31 @@ function BookCard() {
   }
 
   const handleCommentDeleted = (deletedId) => {
-  setComments(prev => prev.filter(comment => comment.id !== deletedId));
+    setComments((prev) => prev.filter((comment) => comment.id !== deletedId));
+  };
+
+  const handleDeleteComment = (commentId) => {
+    setCommentSelected(commentId);
+    setModalDeleteCommentOpen(true);
+  };
+
+  const handleRequestDeleteReply = (commentId, replyId) => {
+    setCommentSelected(commentId);
+    setReplySelected(replyId);
+    setModalDeleteReplyOpen(true);
+  };
+
+  const handleReplyDeleted = (deletedReplyId) => {
+  // Itera por todos los comentarios para encontrar cuál tiene esa reply
+  comments.forEach((comment) => {
+    const cb = deleteReplyCallbacks.current[comment.id];
+    if (cb) {
+      cb(deletedReplyId);
+    }
+  });
 };
 
-const handleDeleteComment = (CommentId) => {
-  setModalDeleteCommentOpen(!modalDeleteBookOpen);
-  setCommentSelected(CommentId);
-};
+
 
   return (
     <div className="container-EbookCard">
@@ -390,10 +452,18 @@ const handleDeleteComment = (CommentId) => {
             />
           )}
           {modalDeleteCommentOpen && (
-            <modalDeleteComment
-              Id={commentSelected}
+            <ModalDeleteComment
+              commentId={commentSelected}
               onDelete={handleCommentDeleted}
               onClose={handleDeleteCommentClick}
+            />
+          )}
+          {modalDeleteReplyOpen && (
+            <ModalDeleteReply
+              replyId={replySelected}
+              commentId={commentSelected}
+              onDelete={handleReplyDeleted}
+              onClose={handleDeleteReplyClick}
             />
           )}
         </div>
@@ -406,8 +476,8 @@ const handleDeleteComment = (CommentId) => {
                 Responder a <strong>{replyUser}</strong>
               </p>
               <div
-              className="bookCard-write-replyTo-close"
-              onClick={() => handleSetReply(null, replyingTo)}
+                className="bookCard-write-replyTo-close"
+                onClick={() => handleSetReply(null, replyingTo)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -459,8 +529,15 @@ const handleDeleteComment = (CommentId) => {
               setReply={(userName) => handleSetReply(userName, comment.id)}
               replyingTo={replyingTo}
               setReplyingTo={setReplyingTo}
-              forceReloadReplies={forceReloadReplies[comment.id]}
-              onDeleteComment={handleDeleteComment}
+              replies={comment.replies || []}
+              onRequestDelete={handleDeleteComment}
+              onRequestDeleteReply={handleRequestDeleteReply}
+              onRegisterReplyCallback={(cb) => {
+                registerReplyCallback(comment.id, cb); // ← Registrar el callback
+              }}
+              onRegisterDeleteReplyCallback={(cb) => {
+    registerDeleteReplyCallback(comment.id, cb);
+  }}
             />
           ))
         )}

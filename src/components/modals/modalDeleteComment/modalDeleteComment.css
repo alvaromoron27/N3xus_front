@@ -1,8 +1,11 @@
-.modal-contentDeleteComment{
+.modal-contentDeleteComment {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: white;
+    width: 90vw;
+    color: white;
+    background-color: #101010;
+    border: 1px solid #191919;
     padding: 20px;
     border-radius: 8px;
     position: relative;
@@ -12,32 +15,36 @@
     overflow-y: auto;
 }
 
-.modalDeleteComment-buttons{
+.modalDeleteComment-buttons {
     display: flex;
     gap: 20px;
 }
 
-.modalDeleteComment-buttons button{
+.modalDeleteComment-buttons button {
     height: 40px;
     width: 100px;
     border-radius: 10px;
 }
 
-.modalDeleteComment-delete{
+.modalDeleteComment-delete {
     background-color: red;
     font-weight: bold;
     transition: all 0.2s ease-in-out;
+    font-family: 'regular';
+    letter-spacing: 0.5px;
 }
 
-.modalDeleteComment-cancel{
+.modalDeleteComment-cancel {
     background-color: white;
     transition: all 0.2s ease-in-out;
+    font-family: 'regular';
+    letter-spacing: 0.5px;
 }
 
-.modalDeleteComment-delete:hover{
+.modalDeleteComment-delete:hover {
     box-shadow: 1px 1px 8px red;
 }
 
-.modalDeleteComment-cancel:hover{
+.modalDeleteComment-cancel:hover {
     box-shadow: 1px 1px 8px rgb(126, 126, 126);
 }

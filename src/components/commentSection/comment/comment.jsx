@@ -3,11 +3,11 @@ import {
   getUserById,
   getReplies,
   getReplyCount,
-  addLike,
-  getLikes,
-  removeLike,
+  addLikeComment,
+  getCommentLikes,
+  removeLikeComment,
 } from "../../../api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { timeAgo } from "../../../utils/functions/timeAgo";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -23,40 +23,66 @@ const Comment = ({
   setReply,
   replyingTo,
   setReplyingTo,
-  forceReloadReplies,
-  onDeleteComment,
+  onRequestDelete,
+  onRequestDeleteReply,
+  replies: initialReplies = [],
+  onRegisterReplyCallback,
+  onRegisterDeleteReplyCallback,
 }) => {
   const user = useSelector((state) => state?.auth?.user?.Id);
   const [userComment, setUserComment] = useState(null);
-  const [replies, setReplies] = useState([]);
+  const [replies, setReplies] = useState(initialReplies);
   const [totalReplies, setTotalReplies] = useState(0);
-  const [replyUsers, setReplyUsers] = useState({});
+  const [replyUsers] = useState({});
   const [showReplies, setShowReplies] = useState(false);
   const [loadingReplies, setLoadingReplies] = useState(false);
   const [repliesPage, setRepliesPage] = useState(0);
   const [hasMoreReplies, setHasMoreReplies] = useState(true);
   const [likesComment, setLikesComment] = useState(0);
   const [userLikeComment, setUserLikeComment] = useState(false);
-  const [userLikeReply, setUserLikeReply] = useState(false);
   const [userAuthor, setUserAuthor] = useState(false);
-
   const REPLIES_PER_PAGE = 5;
   const navigate = useNavigate();
 
+  const addLocalReply = useCallback(
+  (reply) => {
+    setReplies((prev) => [reply, ...prev]);
+    setTotalReplies((t) => t + 1);
+    setShowReplies(true);
+  },
+  []
+);
+
+  const deleteLocalReply = useCallback(
+  (replyId) => {
+    setReplies((prev) => prev.filter((r) => r.id !== replyId));
+    setTotalReplies((t) => t - 1);
+  },
+  []
+);
+
+  // Registra el callback cuando el componente monta
   useEffect(() => {
-    if (forceReloadReplies) {
-      loadReplies(0);
+    if (onRegisterReplyCallback) {
+      onRegisterReplyCallback(addLocalReply);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [forceReloadReplies]);
+  }, [onRegisterReplyCallback, addLocalReply]);
+
+  useEffect(() => {
+  if (onRegisterDeleteReplyCallback) {
+    onRegisterDeleteReplyCallback(deleteLocalReply);
+  }
+}, [onRegisterDeleteReplyCallback, deleteLocalReply]);
 
   useEffect(() => {
     const fetchLikes = async () => {
       try {
-        const infoLikes = user ? await getLikes(id, user) : await getLikes(id);
+        const infoLikesComment = user
+          ? await getCommentLikes(id, user)
+          : await getCommentLikes(id);
 
-        setLikesComment(infoLikes.likeCount);
-        setUserLikeComment(!!infoLikes.likedByUser); // convierte a booleano
+        setLikesComment(infoLikesComment.likeCount);
+        setUserLikeComment(!!infoLikesComment.likedByUser); // convierte a booleano
       } catch (error) {
         console.error("Error al obtener likes del comentario:", error);
       }
@@ -77,6 +103,7 @@ const Comment = ({
 
     fetchReplyCount();
   }, [id]);
+
 
   useEffect(() => {
     if (userId === user) {
@@ -106,6 +133,7 @@ const Comment = ({
     }
   };
 
+
   // Función para cargar respuestas cuando se hace click en "Respuestas"
   const handleToggleReplies = () => {
     if (showReplies) {
@@ -133,19 +161,6 @@ const Comment = ({
         return [...prev, ...filtered];
       });
       setTotalReplies(total);
-
-      const userMap = {};
-      await Promise.all(
-        newReplies.map(async (reply) => {
-          try {
-            const userData = await getUserById(reply.user_id);
-            userMap[reply.id] = userData;
-          } catch (err) {
-            console.error(`Error cargando usuario de reply ${reply.id}`, err);
-          }
-        })
-      );
-      setReplyUsers((prev) => ({ ...prev, ...userMap }));
       setHasMoreReplies(hasMore);
       setRepliesPage(pageToLoad + 1);
     } catch (error) {
@@ -165,38 +180,20 @@ const Comment = ({
     try {
       if (!userLikeComment) {
         // El usuario aún no ha dado like → agregar like
-        const resultLikes = await addLike({ userId: user, commentId: id });
+        const resultLikes = await addLikeComment({
+          userId: user,
+          commentId: id,
+        });
         setLikesComment(resultLikes.numberLikes);
         setUserLikeComment(true);
       } else {
         // El usuario ya dio like → eliminar like
-        const resultLikes = await removeLike({ userId: user, commentId: id });
+        const resultLikes = await removeLikeComment({
+          userId: user,
+          commentId: id,
+        });
         setLikesComment(resultLikes.numberLikes);
         setUserLikeComment(false);
-      }
-    } catch (error) {
-      console.error("Error al alternar el like:", error);
-    }
-  };
-
-  const handleLikeReplyClick = async () => {
-    if (!user) {
-      // Usuario no autenticado → redirigir a login
-      navigate("/login");
-      return;
-    }
-
-    try {
-      if (!userLikeReply) {
-        // El usuario aún no ha dado like → agregar like
-        const resultLikes = await addLike({ userId: user, commentId: id });
-        setLikesComment(resultLikes.numberLikes);
-        setUserLikeReply(true);
-      } else {
-        // El usuario ya dio like → eliminar like
-        const resultLikes = await removeLike({ userId: user, commentId: id });
-        setLikesComment(resultLikes.numberLikes);
-        setUserLikeReply(false);
       }
     } catch (error) {
       console.error("Error al alternar el like:", error);
@@ -282,13 +279,13 @@ const Comment = ({
                 <div onClick={toggleReply} title="Responder">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 512 512"
                   >
                     <path
-                      fill="#ffffff"
-                      d="M12 19h-2v-2H8v-2H6v-2H4v-2h2V9h2V7h2V5h2v4h8v6h-8z"
+                      fill="currentColor"
+                      d="M185.2 128.6V19.7L0 204.9l185.2 185.2v-109c152.5 0 250.5 0 326.8 217.9c0-108.9 10.9-370.4-326.8-370.4"
                     />
                   </svg>
                 </div>
@@ -345,7 +342,7 @@ const Comment = ({
                 <div>{likesComment > 0 ? likesComment : null}</div>
               </div>
               {userAuthor && (
-                <div onClick={onDeleteComment(id)} title="Eliminar">
+                <div onClick={() => onRequestDelete(id)} title="Eliminar">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -368,8 +365,8 @@ const Comment = ({
                   key={reply.id}
                   reply={reply}
                   userData={replyUsers[reply.id]}
-                  onLoadUser={(id, user) =>
-                    setReplyUsers((prev) => ({ ...prev, [id]: user }))
+                  onRequestDeleteReply={(replyId) =>
+                    onRequestDeleteReply && onRequestDeleteReply(id, replyId)
                   }
                 />
               ))}
